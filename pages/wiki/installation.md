@@ -12,8 +12,12 @@ Estimated time: 15 minutes automated, 60 minutes manual.
 | OS | Recommended setup | Notes |
 | --- | --- | --- |
 | Linux (Ubuntu 22.04 / Debian 12) | Production | systemd services, Nginx, Certbot |
-| Windows 10/11 | Development or demo | WSL2 or native with start scripts / Task Scheduler |
+| Windows 10/11 | Docker Desktop (WSL2) or native | Same Docker stack as Linux; no WSL needed with Docker Desktop |
 | macOS 13+ | Development | launchd plist, Homebrew prerequisites |
+
+On every operating system the fastest repeatable path is Docker (section 2):
+it runs the database, Redis, web, workers and the Python backend with the
+same commands on Linux, macOS and Windows.
 
 The automated installer detects the operating system and generates the
 right service units for it. The manual sections below cover each OS in
@@ -41,9 +45,74 @@ creates the app and backend `.env` files, installs Node and Python
 dependencies, generates service units for the detected OS and verifies
 the endpoints.
 
-## 2. Linux (production)
+## 2. Docker (all operating systems)
+
+The entire stack ships as Docker images and behaves identically on Linux,
+macOS and Windows (Docker Desktop with the WSL2 backend). This is the
+recommended path on Windows - no Node, Python, PostgreSQL or Redis needs to
+be installed natively.
 
 ### 2.1 Prerequisites
+
+- Docker Engine 24+ on Linux, or Docker Desktop on Windows / macOS.
+- At least 4 GB of RAM available to the Docker engine.
+- A terminal (PowerShell, Git Bash or a shell).
+
+### 2.2 Start the stack
+
+```bash
+git clone https://github.com/aetheris-project/aetheris-app.git
+cd aetheris-app
+cp .env.example .env
+# set a strong AETHERIS_SECRET (>= 32 chars), e.g. openssl rand -hex 32
+AETHERIS_SECRET=$(openssl rand -hex 32)
+docker compose up -d --build
+```
+
+Services brought up by `docker-compose.yml`:
+
+| Service | Container name | Exposed port |
+| --- | --- | --- |
+| PostgreSQL 16 | aetheris-db | 5432 |
+| Redis 7 | aetheris-redis | 6379 |
+| Next.js web | aetheris-web | 3000 |
+| BullMQ worker | aetheris-worker | - |
+| Python backend | aetheris-backend | 8000 |
+
+### 2.3 Verify
+
+```bash
+docker compose ps                       # all services healthy
+curl -sS -o /dev/null -w '%{http_code}\n' http://localhost:3000/login
+curl -sS http://localhost:8000/health
+```
+
+### 2.4 Windows specifics
+
+1. Install Docker Desktop from https://www.docker.com/products/docker-desktop/
+   and keep the default WSL2 backend.
+2. Run the commands from PowerShell or Git Bash; the compose file needs no
+   path or line-ending changes (the container entrypoint is LF-safe).
+3. Everything runs inside Linux containers, so there is no need for WSL
+   distributions or native toolchains.
+
+### 2.5 Operations
+
+```bash
+docker compose logs -f web       # web logs
+docker compose logs -f worker    # worker logs
+docker compose down              # stop (data volumes kept)
+docker compose down -v           # stop and wipe data volumes
+```
+
+The entrypoint applies pending Prisma migrations on every boot, so a fresh
+stack is ready on first start. To expose the web UI behind Nginx/Caddy, proxy
+`http://127.0.0.1:3000` (see the Nginx block in the Linux section for the
+WebSocket headers required by the VNC console).
+
+## 3. Linux (production)
+
+### 3.1 Prerequisites
 
 Supported: Ubuntu 22.04 LTS (recommended) and Debian 12.
 
@@ -71,7 +140,7 @@ SQL
 redis-cli ping   # expect: PONG
 ```
 
-### 2.2 Automated path
+### 3.2 Automated path
 
 ```bash
 python -m aetheris_installer --yes \
@@ -91,7 +160,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now aetheris-web aetheris-worker aetheris-backend
 ```
 
-### 2.3 Manual path
+### 3.3 Manual path
 
 ```bash
 git clone https://github.com/aetheris-project/aetheris-app.git
@@ -137,7 +206,7 @@ await prisma.$disconnect();
 "
 ```
 
-### 2.4 Systemd units (manual)
+### 3.4 Systemd units (manual)
 
 `/etc/systemd/system/aetheris-web.service`:
 
@@ -198,7 +267,7 @@ RestartSec=3
 WantedBy=multi-user.target
 ```
 
-### 2.5 Nginx reverse proxy and TLS
+### 3.5 Nginx reverse proxy and TLS
 
 `/etc/nginx/sites-available/aetheris`:
 
@@ -232,13 +301,14 @@ sudo systemctl reload nginx
 sudo certbot --nginx -d app.example.com
 ```
 
-## 3. Windows
+## 4. Windows
 
-The fastest path on Windows is the automated installer, which generates
+The fastest path on Windows is Docker (section 2), which needs no native
+toolchain at all. For a native install, the automated installer generates
 start scripts and Task Scheduler registration. WSL2 is recommended for a
 production-like experience.
 
-### 3.1 Native Windows (automated)
+### 4.1 Native Windows (automated)
 
 ```bash
 git clone https://github.com/aetheris-project/aetheris-installer.git
@@ -262,7 +332,7 @@ Register them to start at login (run once, as Administrator):
 aetheris-deploy\deploy\register-schtasks.cmd
 ```
 
-### 3.2 Native Windows (manual)
+### 4.2 Native Windows (manual)
 
 ```bat
 git clone https://github.com/aetheris-project/aetheris-app.git
@@ -289,7 +359,7 @@ Requirements on Windows: Node.js 20.x LTS, Python 3.10+ and a local
 PostgreSQL/Redis (or use the SQLite-backed Python backend for demos, which
 needs none).
 
-### 3.3 Windows via WSL2 (recommended)
+### 4.3 Windows via WSL2
 
 Install WSL2 with Ubuntu 22.04, then follow the Linux section verbatim:
 
@@ -299,9 +369,9 @@ wsl
 # then: the Linux instructions from section 2
 ```
 
-## 4. macOS
+## 5. macOS
 
-### 4.1 Prerequisites
+### 5.1 Prerequisites
 
 Install prerequisites with Homebrew:
 
@@ -311,7 +381,7 @@ brew services start postgresql@16
 brew services start redis
 ```
 
-### 4.2 Automated path
+### 5.2 Automated path
 
 ```bash
 python -m aetheris_installer --yes \
@@ -329,7 +399,7 @@ launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.aetheris.backend.pli
 # to unload later: launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.aetheris.backend.plist
 ```
 
-### 4.3 Manual path
+### 5.3 Manual path
 
 ```bash
 git clone https://github.com/aetheris-project/aetheris-app.git
@@ -356,7 +426,7 @@ Note on Apple Silicon: Node.js and Python install cleanly via Homebrew and
 `pyenv`; all drivers are pure HTTP clients, so no native bindings are
 required.
 
-## 5. Connecting Pterodactyl (all platforms)
+## 6. Connecting Pterodactyl (all platforms)
 
 1. Create an Application API key in the Pterodactyl Admin Panel
    (`Admin -> Application API`) with read/write on Servers, Nodes,
@@ -384,7 +454,7 @@ backups map to the Client API.
 Proxmox VE and VirtFusion setup: see `proxmox-setup.md` and
 `virtfusion-setup.md`.
 
-## 6. Verification checklist
+## 7. Verification checklist
 
 ```bash
 # Web responds
@@ -400,18 +470,20 @@ sudo journalctl -u aetheris-worker -n 50 --no-pager
 redis-cli keys 'bull:*' | head
 ```
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 | Symptom | Cause and fix |
 | --- | --- |
 | Web fails to start, environment error | `src/lib/config/env.ts` aborts with the exact variable. Set it in `.env` and restart. |
+| `docker compose up` fails on Windows | Enable the WSL2 backend in Docker Desktop settings and restart the engine. |
+| Migrations don't run in containers | The entrypoint runs `prisma migrate deploy` on boot; check `docker compose logs web`. |
 | `prisma migrate deploy` fails | Confirm `DATABASE_URL` uses a user with `CREATE` rights. |
 | Provisioning jobs stuck in queue | Check the worker logs; most common cause is a 401 from a rotated Pterodactyl key. |
 | Console shows no frames | The reverse proxy must forward `Upgrade` and `Connection: upgrade` (section 2.5). |
 | Backend login returns 422 | The email uses a reserved TLD (`.local`, `.test`); use a real domain or `example.com`. |
 | Redis connection refused | Redis binds to loopback; if Aetheris runs in a container, set `REDIS_URL` to the host address. |
 
-## 8. Next steps
+## 9. Next steps
 
 - Automated installer reference: `installer.md`.
 - Python backend reference: `backend.md`.
