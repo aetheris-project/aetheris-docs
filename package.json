@@ -21,6 +21,9 @@
     "@types/react": "18.3.11",
     "typescript": "5.6.3"
   },
+  "overrides": {
+    "next-mdx-remote": "6.0.0"
+  },
   "engines": {
     "node": ">=20.0.0"
   }
