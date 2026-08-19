@@ -308,7 +308,19 @@ toolchain at all. For a native install, the automated installer generates
 start scripts and Task Scheduler registration. WSL2 is recommended for a
 production-like experience.
 
-### 4.1 Native Windows (automated)
+### 4.1 Windows via winget (recommended)
+
+The Aetheris Windows Installer is available on the Windows Package Manager:
+
+```
+winget install AetherisProject.AetherisWindowsInstaller
+```
+
+This downloads the standalone TUI wizard, which manages Docker Desktop,
+Git, and the full Docker stack. After install, follow the interactive
+screens to choose your directory, database engine, and environment settings.
+
+### 4.2 Native Windows (automated)
 
 ```bash
 git clone https://github.com/aetheris-project/aetheris-installer.git
@@ -332,7 +344,7 @@ Register them to start at login (run once, as Administrator):
 aetheris-deploy\deploy\register-schtasks.cmd
 ```
 
-### 4.2 Native Windows (manual)
+### 4.3 Native Windows (manual)
 
 ```bat
 git clone https://github.com/aetheris-project/aetheris-app.git
@@ -359,7 +371,7 @@ Requirements on Windows: Node.js 20.x LTS, Python 3.10+ and a local
 PostgreSQL/Redis (or use the SQLite-backed Python backend for demos, which
 needs none).
 
-### 4.3 Windows via WSL2
+### 4.4 Windows via WSL2
 
 Install WSL2 with Ubuntu 22.04, then follow the Linux section verbatim:
 
