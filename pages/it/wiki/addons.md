@@ -20,7 +20,7 @@ Ogni modulo include un `manifest.json` che lo descrive:
     "name": "Leonardo Galli",
     "github": "Leo-Galli"
   },
-  "license": "MIT",
+  "license": "Aetheris License v1.0",
   "entry": "src/index.ts",
   "requires": ["billing"],
   "description": "Accetta pagamenti crypto tramite Coinbase Commerce.",
@@ -37,7 +37,7 @@ Campi del manifest:
 | `category` | sì | `payment-gateway`, `notification`, `storage`, `utility`, `panel` |
 | `version` | sì | Versione semantica |
 | `author` | sì | `name` e handle `github` del manutentore |
-| `license` | sì | Identificatore licenza SPDX |
+| `license` | sì | Identificatore della licenza (es. `Aetheris License v1.0`) |
 | `entry` | sì | Punto di ingresso principale relativo alla radice del modulo |
 | `requires` | no | Funzionalità piattaforma richieste (`billing`, `vncConsole`, ...) |
 | `description` | sì | Descrizione in una riga mostrata nello store |

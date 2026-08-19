@@ -19,7 +19,7 @@ Every module ships a `manifest.json` that describes it:
     "name": "Leonardo Galli",
     "github": "Leo-Galli"
   },
-  "license": "MIT",
+  "license": "Aetheris License v1.0",
   "entry": "src/index.ts",
   "requires": ["billing"],
   "description": "Accept crypto payments through Coinbase Commerce.",
@@ -36,7 +36,7 @@ Manifest fields:
 | `category` | yes | `payment-gateway`, `notification`, `storage`, `utility`, `panel` |
 | `version` | yes | Semantic version |
 | `author` | yes | `name` and `github` handle of the maintainer |
-| `license` | yes | SPDX license identifier |
+| `license` | yes | License identifier (e.g. `Aetheris License v1.0`) |
 | `entry` | yes | Main entry point relative to the module root |
 | `requires` | no | Platform features the module depends on (`billing`, `vncConsole`, ...) |
 | `description` | yes | One-line description shown in the store |
