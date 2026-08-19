@@ -1,19 +1,51 @@
 # Installation guide
 
-This guide walks through a production deployment of the Aetheris control plane
-(`aetheris-app`) on a single server, connected to Pterodactyl, Proxmox VE and
-VirtFusion. Both the automated installer and the fully manual path are covered.
+This guide covers deploying the Aetheris control plane on Linux, Windows
+and macOS, both with the automated installer (`aetheris-installer`) and
+manually. The platform is one billing engine, one client portal and one
+set of hypervisor drivers (Pterodactyl, Proxmox VE, VirtFusion).
 
-Estimated time: 30 minutes for the automated path, 60 minutes manual.
+Estimated time: 15 minutes automated, 60 minutes manual.
 
-## 1. Server prerequisites
+## Choose your operating system
 
-Supported operating systems:
+| OS | Recommended setup | Notes |
+| --- | --- | --- |
+| Linux (Ubuntu 22.04 / Debian 12) | Production | systemd services, Nginx, Certbot |
+| Windows 10/11 | Development or demo | WSL2 or native with start scripts / Task Scheduler |
+| macOS 13+ | Development | launchd plist, Homebrew prerequisites |
 
-- Ubuntu 22.04 LTS (recommended)
-- Debian 12
+The automated installer detects the operating system and generates the
+right service units for it. The manual sections below cover each OS in
+detail.
 
-Minimum specifications:
+## 1. Automated installer (all operating systems)
+
+The `aetheris-installer` repository provides an archinstall-style wizard
+and a fully scriptable `--yes` mode. Full reference: `installer.md`.
+
+```bash
+git clone https://github.com/aetheris-project/aetheris-installer.git
+cd aetheris-installer
+python -m aetheris_installer --yes
+```
+
+Run `--dry-run` first to review every action without touching disk:
+
+```bash
+python -m aetheris_installer --yes --dry-run
+```
+
+The installer writes the deployment layout under `./aetheris-deploy`,
+creates the app and backend `.env` files, installs Node and Python
+dependencies, generates service units for the detected OS and verifies
+the endpoints.
+
+## 2. Linux (production)
+
+### 2.1 Prerequisites
+
+Supported: Ubuntu 22.04 LTS (recommended) and Debian 12.
 
 | Resource | Minimum | Recommended |
 | --- | --- | --- |
@@ -22,23 +54,13 @@ Minimum specifications:
 | Disk | 10 GB free | 20 GB NVMe |
 | Network | 100 Mbps | 1 Gbps |
 
-Required software versions:
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs postgresql redis-server nginx certbot python3-certbot-nginx
+```
 
-| Software | Minimum | Install |
-| --- | --- | --- |
-| Node.js | 20.x LTS | `curl -fsSL https://deb.nodesource.com/setup_20.x \| sudo -E bash -` |
-| PostgreSQL | 16 | `sudo apt install postgresql-16` |
-| Redis | 7 | `sudo apt install redis-server` |
-| Nginx | 1.22 | `sudo apt install nginx` |
-| Certbot | latest | `sudo apt install certbot python3-certbot-nginx` |
-
-Open ports on the host firewall:
-
-- `80/tcp` and `443/tcp` - web and TLS termination.
-- `5432/tcp` - PostgreSQL, restricted to localhost or a private network only.
-- `6379/tcp` - Redis, restricted to localhost only.
-
-### 1.1 PostgreSQL setup
+Open `80/tcp` and `443/tcp` on the firewall; keep PostgreSQL and Redis on
+loopback only.
 
 ```bash
 sudo -u postgres psql <<'SQL'
@@ -46,99 +68,44 @@ CREATE USER aetheris WITH PASSWORD 'change-me-strong';
 CREATE DATABASE aetheris OWNER aetheris;
 GRANT ALL PRIVILEGES ON DATABASE aetheris TO aetheris;
 SQL
-```
-
-Verify the connection:
-
-```bash
-PGPASSWORD='change-me-strong' psql -h 127.0.0.1 -U aetheris -d aetheris -c 'SELECT 1;'
-```
-
-### 1.2 Redis setup
-
-Redis binds to loopback by default, which is correct. Confirm:
-
-```bash
 redis-cli ping   # expect: PONG
 ```
 
-## 2. Automated installer
-
-Clone the repository and run the non-interactive installer. Every value is
-passed through environment variables; the installer never prompts.
+### 2.2 Automated path
 
 ```bash
-git clone https://github.com/aetheris-enterprise/aetheris-app.git
-cd aetheris-app
-
-DATABASE_URL='postgresql://aetheris:change-me-strong@127.0.0.1:5432/aetheris' \
-REDIS_URL='redis://127.0.0.1:6379' \
-AETHERIS_APP_URL='https://app.example.com' \
-ADMIN_EMAIL='ops@example.com' \
-ADMIN_PASSWORD='a-very-long-password-here' \
-PTERODACTYL_URL='https://panel.example.com' \
-PTERODACTYL_APP_API_KEY='ptla_xxxxxxxxxxxxxxxx' \
-PTERODACTYL_CLIENT_API_KEY='ptlc_xxxxxxxxxxxxxxxx' \
-bash bin/install.sh --yes --systemd --nginx
+python -m aetheris_installer --yes \
+  --target /opt/aetheris \
+  --web-port 3000 \
+  --admin-email ops@example.com \
+  --admin-password 'a-very-long-password'
 ```
 
-What the installer does, in order:
-
-1. Preflight: verifies bash, Node.js >= 20, npm, openssl, memory and disk.
-2. Loads `.env` (created from `.env.example` when missing) and validates that
-   `DATABASE_URL`, `REDIS_URL` and `AETHERIS_APP_URL` are present.
-3. Installs dependencies with `npm ci` when a lockfile exists.
-4. Probes PostgreSQL reachability, runs `prisma generate` and
-   `prisma migrate deploy`.
-5. Probes Redis with a raw `PING`/`PONG` exchange.
-6. Verifies the Pterodactyl Application API with a `GET /api/application/nodes`
-   call using the provided key.
-7. Creates the super-admin account (idempotent; scrypt password hashing).
-8. With `--systemd`: writes `aetheris-web.service` and `aetheris-worker.service`
-   and reloads systemd.
-9. With `--nginx`: writes an Nginx site template to `deploy/aetheris.conf`.
-
-Start the services:
+The installer writes systemd units (`aetheris-web.service`,
+`aetheris-worker.service`, `aetheris-backend.service`) under
+`/opt/aetheris/deploy`. Install and start them:
 
 ```bash
-sudo systemctl enable --now aetheris-web aetheris-worker
-sudo systemctl status aetheris-web --no-pager
+sudo cp /opt/aetheris/deploy/*.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now aetheris-web aetheris-worker aetheris-backend
 ```
 
-Flags:
-
-| Flag | Effect |
-| --- | --- |
-| `--yes` | Run non-interactively (required). |
-| `--skip-checks` | Skip memory, disk and reachability probes. |
-| `--systemd` | Install systemd units (requires root). |
-| `--nginx` | Write the Nginx site template (requires root). |
-
-Exit codes: `0` success; `1` preflight; `2` dependencies; `3` database;
-`4` Redis; `5` Pterodactyl verification; `6` super-admin creation.
-
-## 3. Manual setup
-
-The manual path covers the same steps without the installer.
-
-### 3.1 Dependencies and build
+### 2.3 Manual path
 
 ```bash
-git clone https://github.com/aetheris-enterprise/aetheris-app.git
-cd aetheris-app
+git clone https://github.com/aetheris-project/aetheris-app.git
+sudo mkdir -p /opt
+sudo mv aetheris-app /opt/aetheris-app   # the systemd units below assume this path
+cd /opt/aetheris-app
 npm ci
 npx prisma generate
 npx prisma migrate deploy
 npm run build
-```
-
-### 3.2 Environment
-
-```bash
 cp .env.example .env
 ```
 
-Edit `.env` and set at minimum:
+Set at minimum in `.env`:
 
 ```ini
 DATABASE_URL=postgresql://aetheris:change-me-strong@127.0.0.1:5432/aetheris
@@ -149,20 +116,12 @@ NEXTAUTH_URL=https://app.example.com
 NEXTAUTH_SECRET=<openssl rand -hex 32>
 ```
 
-Generate secrets:
-
-```bash
-openssl rand -hex 32
-```
-
-### 3.3 Super-admin account
-
-Create the initial administrator with the same script the installer uses:
+Create the super-admin (scrypt hashing, idempotent):
 
 ```bash
 DATABASE_URL='postgresql://aetheris:change-me-strong@127.0.0.1:5432/aetheris' \
 ADMIN_EMAIL='ops@example.com' \
-ADMIN_PASSWORD='a-very-long-password-here' \
+ADMIN_PASSWORD='a-very-long-password' \
 node --input-type=module -e "
 import { PrismaClient } from '@prisma/client';
 import { scryptSync, randomBytes } from 'node:crypto';
@@ -174,13 +133,13 @@ await prisma.user.upsert({
   update: {},
   create: { email: process.env.ADMIN_EMAIL, passwordHash: 'scrypt:' + salt + ':' + hash, role: 'superadmin', name: 'Aetheris Administrator' }
 });
-await prisma.\$disconnect();
+await prisma.$disconnect();
 "
 ```
 
-### 3.4 Systemd units
+### 2.4 Systemd units (manual)
 
-Web server (`/etc/systemd/system/aetheris-web.service`):
+`/etc/systemd/system/aetheris-web.service`:
 
 ```ini
 [Unit]
@@ -195,15 +154,12 @@ EnvironmentFile=/opt/aetheris-app/.env
 ExecStart=/usr/bin/node /opt/aetheris-app/node_modules/next/dist/bin/next start -p 3000
 Restart=on-failure
 RestartSec=3
-User=aetheris
-StandardOutput=journal
-StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-Background workers (`/etc/systemd/system/aetheris-worker.service`):
+`/etc/systemd/system/aetheris-worker.service`:
 
 ```ini
 [Unit]
@@ -218,22 +174,31 @@ EnvironmentFile=/opt/aetheris-app/.env
 ExecStart=/usr/bin/node /opt/aetheris-app/node_modules/.bin/tsx /opt/aetheris-app/src/workers/index.ts
 Restart=on-failure
 RestartSec=5
-User=aetheris
-StandardOutput=journal
-StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-```bash
-sudo useradd --system --home /opt/aetheris-app --shell /usr/sbin/nologin aetheris
-sudo chown -R aetheris:aetheris /opt/aetheris-app
-sudo systemctl daemon-reload
-sudo systemctl enable --now aetheris-web aetheris-worker
+`/etc/systemd/system/aetheris-backend.service` (Python REST API):
+
+```ini
+[Unit]
+Description=Aetheris Python backend API
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/aetheris-app/backend
+ExecStart=/opt/aetheris-app/backend/.venv/bin/python -m uvicorn aetheris_backend.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
 ```
 
-### 3.5 Nginx reverse proxy
+### 2.5 Nginx reverse proxy and TLS
 
 `/etc/nginx/sites-available/aetheris`:
 
@@ -264,39 +229,142 @@ server {
 sudo ln -s /etc/nginx/sites-available/aetheris /etc/nginx/sites-enabled/aetheris
 sudo nginx -t
 sudo systemctl reload nginx
+sudo certbot --nginx -d app.example.com
 ```
 
-### 3.6 TLS with Certbot
+## 3. Windows
+
+The fastest path on Windows is the automated installer, which generates
+start scripts and Task Scheduler registration. WSL2 is recommended for a
+production-like experience.
+
+### 3.1 Native Windows (automated)
 
 ```bash
-sudo certbot --nginx -d app.example.com
-sudo systemctl status certbot.timer --no-pager   # automatic renewal
+git clone https://github.com/aetheris-project/aetheris-installer.git
+cd aetheris-installer
+python -m venv .venv
+.venv\Scripts\activate
+python -m aetheris_installer --yes
 ```
 
-## 4. Connecting Pterodactyl
+The installer writes `deploy\start-backend.bat`, `deploy\start-web.bat`
+and `deploy\register-schtasks.cmd`. Start the services in two terminals:
 
-### 4.1 Create the Application API key
+```bat
+aetheris-deploy\aetheris-app\backend\start-backend.bat
+aetheris-deploy\aetheris-app\start-web.bat
+```
 
-In the Pterodactyl Admin Panel: `Admin -> Application API -> Create`.
+Register them to start at login (run once, as Administrator):
 
-Grant read/write to:
+```bat
+aetheris-deploy\deploy\register-schtasks.cmd
+```
 
-- Servers
-- Nodes
-- Allocations
-- Eggs
-- Users
+### 3.2 Native Windows (manual)
 
-Copy the key (shown once). In Aetheris, store it as `PTERODACTYL_APP_API_KEY`.
+```bat
+git clone https://github.com/aetheris-project/aetheris-app.git
+cd aetheris-app
+npm ci
+npx prisma generate
+npx prisma migrate deploy
+npm run build
+copy .env.example .env
+npm run start   # production-like; use npm run dev while developing
+```
 
-### 4.2 Create the Client API key
+The Python backend:
 
-Log in as an administrator on the Pterodactyl front end, then
-`Account -> API Credentials -> Create`. This key drives power actions,
-resource telemetry, console WebSocket tokens and backups. Store it as
-`PTERODACTYL_CLIENT_API_KEY`.
+```bat
+cd backend
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python run.py --port 8000
+```
 
-### 4.3 Verify connectivity
+Requirements on Windows: Node.js 20.x LTS, Python 3.10+ and a local
+PostgreSQL/Redis (or use the SQLite-backed Python backend for demos, which
+needs none).
+
+### 3.3 Windows via WSL2 (recommended)
+
+Install WSL2 with Ubuntu 22.04, then follow the Linux section verbatim:
+
+```bash
+wsl --install -d Ubuntu-22.04
+wsl
+# then: the Linux instructions from section 2
+```
+
+## 4. macOS
+
+### 4.1 Prerequisites
+
+Install prerequisites with Homebrew:
+
+```bash
+brew install node@20 postgresql@16 redis nginx
+brew services start postgresql@16
+brew services start redis
+```
+
+### 4.2 Automated path
+
+```bash
+python -m aetheris_installer --yes \
+  --target ~/aetheris \
+  --backend-port 8000
+```
+
+The installer writes `com.aetheris.backend.plist` under `deploy/`. Load
+it with launchd:
+
+```bash
+mkdir -p ~/Library/LaunchAgents
+cp ~/aetheris/deploy/com.aetheris.backend.plist ~/Library/LaunchAgents/
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.aetheris.backend.plist
+# to unload later: launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.aetheris.backend.plist
+```
+
+### 4.3 Manual path
+
+```bash
+git clone https://github.com/aetheris-project/aetheris-app.git
+cd aetheris-app
+npm ci
+npx prisma generate
+npx prisma migrate deploy
+npm run build
+cp .env.example .env
+npm run dev
+```
+
+Python backend (for demos, SQLite needs no database server):
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python run.py --port 8000
+```
+
+Note on Apple Silicon: Node.js and Python install cleanly via Homebrew and
+`pyenv`; all drivers are pure HTTP clients, so no native bindings are
+required.
+
+## 5. Connecting Pterodactyl (all platforms)
+
+1. Create an Application API key in the Pterodactyl Admin Panel
+   (`Admin -> Application API`) with read/write on Servers, Nodes,
+   Allocations, Eggs and Users. Store it as `PTERODACTYL_APP_API_KEY`.
+2. Create a Client API key from the front end
+   (`Account -> API Credentials`) for power, telemetry, console tokens and
+   backups. Store it as `PTERODACTYL_CLIENT_API_KEY`.
+3. Verify connectivity:
 
 ```bash
 curl -sS -H "Authorization: Bearer $PTERODACTYL_APP_API_KEY" \
@@ -304,58 +372,32 @@ curl -sS -H "Authorization: Bearer $PTERODACTYL_APP_API_KEY" \
      "https://panel.example.com/api/application/nodes?per_page=1"
 ```
 
-Expected: HTTP 200 with a JSON `data` array. The installer performs this check
-automatically.
+4. In the Admin Panel under `Nodes`, add a hypervisor credential of kind
+   `pterodactyl`, then `Synchronize nodes`. Assign eggs to product plans.
 
-### 4.4 Register the node bridge in Aetheris
+Provisioning flow: the client orders a plan, Aetheris picks the target
+node, resolves a free allocation and calls `POST /api/application/servers`
+with the egg, image, resource and feature limits. Suspension, rebuild and
+termination map to the Application API; power, telemetry, console and
+backups map to the Client API.
 
-In the Admin Panel under `Nodes`:
-
-1. Add a hypervisor credential of kind `pterodactyl` with the base URL and
-   both keys.
-2. Click `Synchronize nodes`. Aetheris reads `/api/application/nodes` and
-   stores each node with its allocation capacity.
-3. Assign eggs to product plans. Aetheris reads nests and eggs from
-   `/api/application/nests/{id}/eggs` and exposes them as selectable templates.
-
-Provisioning flow: the client orders a plan, Aetheris picks the target node,
-resolves a free allocation, and calls `POST /api/application/servers` with the
-egg, image, resource limits and feature limits. Suspension, rebuild and
-termination map to the Application API; power, telemetry, console and backups
-map to the Client API.
-
-## 5. Connecting Proxmox VE
-
-1. Create an API-capable user in the Proxmox web UI
-   (`Datacenter -> Permissions -> Users`) with `PVEVMAdmin` and
-   `PVEVMUser` roles and a password.
-2. In Aetheris, add a hypervisor credential of kind `proxmox` with the API URL
-   (`https://pve.example.com:8006`), user (`user@pam`), password and default
-   storage pool.
-3. Set `PROXMOX_VERIFY_TLS=false` only if Proxmox uses a self-signed
-   certificate and TLS is not terminated by a reverse proxy.
-
-See `pterodactyl-bridge.md` and `proxmox-setup.md` in this wiki for the full
-bridge configuration including daemon requirements.
+Proxmox VE and VirtFusion setup: see `proxmox-setup.md` and
+`virtfusion-setup.md`.
 
 ## 6. Verification checklist
 
-Run this after installation:
-
 ```bash
 # Web responds
-curl -sS -o /dev/null -w '%{http_code}\n' https://app.example.com/login   # 200
+curl -sS -o /dev/null -w '%{http_code}\n' http://127.0.0.1:3000/login
 
-# Worker is processing queues
+# Python backend is healthy
+curl -sS http://127.0.0.1:8000/health
+
+# Workers are processing queues (Linux)
 sudo journalctl -u aetheris-worker -n 50 --no-pager
 
 # Redis is used by BullMQ
 redis-cli keys 'bull:*' | head
-
-# Pterodactyl bridge is live (Admin Panel -> Nodes shows synchronized nodes)
-
-# TLS certificate is valid
-echo | openssl s_client -connect app.example.com:443 -servername app.example.com 2>/dev/null | openssl x509 -noout -dates
 ```
 
 ## 7. Troubleshooting
@@ -363,15 +405,18 @@ echo | openssl s_client -connect app.example.com:443 -servername app.example.com
 | Symptom | Cause and fix |
 | --- | --- |
 | Web fails to start, environment error | `src/lib/config/env.ts` aborts with the exact variable. Set it in `.env` and restart. |
-| `prisma migrate deploy` fails | Confirm `DATABASE_URL` uses a user with `CREATE` rights; rerun `sudo -u postgres` grants from section 1.1. |
-| Provisioning jobs stuck in queue | Check `journalctl -u aetheris-worker`; most common cause is a 401 from a rotated Pterodactyl key. |
-| Console shows no frames | The Nginx proxy must forward `Upgrade` and `Connection: upgrade` headers (section 3.5) for the WebSocket tunnel. |
-| Redis connection refused | Redis binds to loopback; if Aetheris runs in a container, set `REDIS_URL` to the host address and bind Redis accordingly. |
-| Certbot fails to obtain a certificate | Ensure port 80 is reachable and the DNS A/AAAA record for the domain points at this server. |
+| `prisma migrate deploy` fails | Confirm `DATABASE_URL` uses a user with `CREATE` rights. |
+| Provisioning jobs stuck in queue | Check the worker logs; most common cause is a 401 from a rotated Pterodactyl key. |
+| Console shows no frames | The reverse proxy must forward `Upgrade` and `Connection: upgrade` (section 2.5). |
+| Backend login returns 422 | The email uses a reserved TLD (`.local`, `.test`); use a real domain or `example.com`. |
+| Redis connection refused | Redis binds to loopback; if Aetheris runs in a container, set `REDIS_URL` to the host address. |
 
 ## 8. Next steps
 
-- Configure dynamic whitelabeling: see `whitelabel.md`.
-- Build a custom backend: see the SDK guide `../sdk/custom-adapter.md`.
-- Consume the platform API: see `../api/reference.md` and the bundled
-  `public/openapi.yaml`.
+- Automated installer reference: `installer.md`.
+- Python backend reference: `backend.md`.
+- Themes and whitelabeling: `theming.md`.
+- Dynamic whitelabeling via the Admin Panel: `whitelabel.md`.
+- Pterodactyl bridge: `pterodactyl-bridge.md`.
+- Custom hypervisor backend: `../sdk/custom-adapter.md`.
+- REST API reference: `../api/reference.md`.

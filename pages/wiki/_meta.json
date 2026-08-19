@@ -1,5 +1,8 @@
 {
   "installation": "Installation guide",
+  "installer": "Automated installer",
+  "backend": "Python backend",
+  "theming": "Theming and whitelabeling",
   "pterodactyl-bridge": "Pterodactyl bridge",
   "proxmox-setup": "Proxmox VE setup",
   "virtfusion-setup": "VirtFusion setup",
