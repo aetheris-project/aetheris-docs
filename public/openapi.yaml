@@ -1,0 +1,344 @@
+openapi: 3.1.0
+info:
+  title: Aetheris Control Plane API
+  version: 1.0.0
+  description: >
+    Billing and virtualization management API. Unifies server lifecycle across
+    Pterodactyl, Proxmox VE and VirtFusion behind a single contract, with a
+    billing engine wired to Stripe, PayPal and Mollie.
+  contact:
+    email: ops@aetheris.enterprise
+servers:
+  - url: https://app.example.com/api
+tags:
+  - name: servers
+    description: Server lifecycle, power, telemetry, console and backups
+  - name: billing
+    description: Invoices, payments and subscriptions
+  - name: whitelabel
+    description: Dynamic tenant branding
+  - name: admin
+    description: Control plane administration
+paths:
+  /whitelabel:
+    get:
+      tags: [whitelabel]
+      summary: Get the dynamic whitelabel configuration
+      parameters:
+        - name: organization
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Whitelabel configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WhitelabelConfig"
+  /servers:
+    get:
+      tags: [servers]
+      summary: List servers for the authenticated tenant
+      responses:
+        "200":
+          description: Server list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Server"
+    post:
+      tags: [servers]
+      summary: Provision a server
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProvisionRequest"
+      responses:
+        "202":
+          description: Provisioning accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Server"
+  /servers/{id}/power:
+    post:
+      tags: [servers]
+      summary: Send a power signal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [signal]
+              properties:
+                signal:
+                  type: string
+                  enum: [start, stop, restart, kill]
+      responses:
+        "202":
+          description: Signal accepted
+  /servers/{id}/console:
+    get:
+      tags: [servers]
+      summary: Open a console session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Console WebSocket endpoint and one-time token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConsoleSession"
+  /servers/{id}/backups:
+    get:
+      tags: [servers]
+      summary: List backups
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Backup list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Backup"
+    post:
+      tags: [servers]
+      summary: Create a backup
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+      responses:
+        "201":
+          description: Backup created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Backup"
+  /billing/invoices:
+    get:
+      tags: [billing]
+      summary: List invoices
+      responses:
+        "200":
+          description: Invoice list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invoice"
+  /billing/invoices/{id}/pay:
+    post:
+      tags: [billing]
+      summary: Attempt payment for an invoice
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment attempt result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+  /admin/nodes:
+    get:
+      tags: [admin]
+      summary: List hypervisor nodes with utilization
+      responses:
+        "200":
+          description: Node list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Node"
+  /admin/hypervisors:
+    post:
+      tags: [admin]
+      summary: Register a hypervisor credential
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HypervisorCredential"
+      responses:
+        "201":
+          description: Credential stored (encrypted)
+  /admin/hypervisors/{id}/sync:
+    post:
+      tags: [admin]
+      summary: Synchronize nodes and eggs from the backend
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Synchronization completed
+components:
+  schemas:
+    WhitelabelConfig:
+      type: object
+      properties:
+        brand:
+          type: object
+          properties:
+            name: { type: string }
+            tagline: { type: string }
+            logoUrl: { type: string }
+            logoDarkUrl: { type: string }
+            domain: { type: string }
+        theme:
+          type: object
+          properties:
+            accent:
+              type: string
+              enum: [emerald, indigo, amber]
+            radius: { type: integer }
+            fontFamily: { type: string }
+        navigation:
+          type: array
+          items:
+            type: object
+            properties:
+              label: { type: string }
+              href: { type: string }
+              cta: { type: boolean }
+        modules:
+          type: object
+          additionalProperties: { type: boolean }
+    ProvisionRequest:
+      type: object
+      required: [planId, nodeId, name]
+      properties:
+        planId: { type: string }
+        nodeId: { type: string }
+        name: { type: string }
+        environment:
+          type: object
+          additionalProperties: { type: string }
+    Server:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        state:
+          type: string
+          enum: [pending, installing, running, suspended, terminated, error]
+        resources:
+          type: object
+          properties:
+            vcpu: { type: integer }
+            memoryMb: { type: integer }
+            diskMb: { type: integer }
+        ipv4: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+    ConsoleSession:
+      type: object
+      properties:
+        url: { type: string }
+        token: { type: string }
+        expiresAt: { type: string, format: date-time }
+        protocol: { type: string, enum: [wss, ws] }
+    Backup:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        sizeBytes: { type: integer }
+        status: { type: string, enum: [pending, completed, failed] }
+        createdAt: { type: string, format: date-time }
+    Invoice:
+      type: object
+      properties:
+        id: { type: string }
+        number: { type: string }
+        status:
+          type: string
+          enum: [draft, pending, paid, overdue, failed, void]
+        totalCents: { type: integer }
+        currency: { type: string }
+        dueDate: { type: string, format: date-time }
+    Payment:
+      type: object
+      properties:
+        id: { type: string }
+        provider: { type: string }
+        status: { type: string, enum: [pending, succeeded, failed, refunded] }
+        amountCents: { type: integer }
+        currency: { type: string }
+    Node:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        location: { type: string }
+        status: { type: string, enum: [online, draining, offline] }
+        capacity:
+          type: object
+          properties:
+            cores: { type: integer }
+            memoryMb: { type: integer }
+            diskMb: { type: integer }
+        utilization:
+          type: object
+          properties:
+            cpuPercent: { type: number }
+            memoryMb: { type: integer }
+            diskMb: { type: integer }
+    HypervisorCredential:
+      type: object
+      required: [kind, name, config]
+      properties:
+        kind:
+          type: string
+          enum: [pterodactyl, proxmox, virtfusion]
+        name: { type: string }
+        config:
+          type: object
+          additionalProperties: true
