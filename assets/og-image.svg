@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#09090B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#18181B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34D399;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:0" />
+      <stop offset="20%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="80%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#27272A" stroke-width="0.5"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.3"/>
+  
+  <!-- Accent line -->
+  <rect x="100" y="280" width="1000" height="2" fill="url(#accentLine)"/>
+  
+  <!-- Icon (large) -->
+  <g transform="translate(100, 150) scale(2.5)">
+    <path d="M32 2 L58 17 L58 47 L32 62 L6 47 L6 17 Z" 
+          fill="none" 
+          stroke="url(#emeraldGrad)" 
+          stroke-width="3"/>
+    <path d="M32 8 L52 20 L52 44 L32 56 L12 44 L12 20 Z" 
+          fill="url(#emeraldGrad)" 
+          opacity="0.15"/>
+    <path d="M32 16 L48 48 L43 48 L40 42 L24 42 L21 48 L16 48 Z M27 38 L37 38 L32 24 Z" 
+          fill="url(#emeraldGrad)"/>
+    <circle cx="32" cy="8" r="3" fill="#10B981"/>
+    <circle cx="10" cy="22" r="2.5" fill="#10B981" opacity="0.7"/>
+    <circle cx="54" cy="22" r="2.5" fill="#10B981" opacity="0.7"/>
+    <circle cx="10" cy="42" r="2.5" fill="#10B981" opacity="0.7"/>
+    <circle cx="54" cy="42" r="2.5" fill="#10B981" opacity="0.7"/>
+    <circle cx="32" cy="56" r="3" fill="#10B981"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="380" y="220" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+        font-size="72" 
+        font-weight="700" 
+        fill="#FAFAFA"
+        letter-spacing="-2">Aetheris</text>
+  
+  <!-- Subtitle -->
+  <text x="380" y="260" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+        font-size="24" 
+        font-weight="500" 
+        fill="#71717A"
+        letter-spacing="6">ENTERPRISE PLATFORM</text>
+  
+  <!-- Tagline -->
+  <text x="100" y="350" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+        font-size="28" 
+        font-weight="400" 
+        fill="#A1A1AA"
+        letter-spacing="0.5">Unified billing &amp; virtualization management</text>
+  
+  <!-- Feature pills -->
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="180" height="40" rx="20" fill="#27272A"/>
+    <text x="90" y="25" 
+          font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" 
+          font-weight="500" 
+          fill="#10B981"
+          text-anchor="middle">Pterodactyl</text>
+    
+    <rect x="200" y="0" width="180" height="40" rx="20" fill="#27272A"/>
+    <text x="290" y="25" 
+          font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" 
+          font-weight="500" 
+          fill="#10B981"
+          text-anchor="middle">Proxmox VE</text>
+    
+    <rect x="400" y="0" width="180" height="40" rx="20" fill="#27272A"/>
+    <text x="490" y="25" 
+          font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" 
+          font-weight="500" 
+          fill="#10B981"
+          text-anchor="middle">VirtFusion</text>
+    
+    <rect x="600" y="0" width="180" height="40" rx="20" fill="#27272A"/>
+    <text x="690" y="25" 
+          font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" 
+          font-weight="500" 
+          fill="#10B981"
+          text-anchor="middle">WHMCS</text>
+    
+    <rect x="800" y="0" width="180" height="40" rx="20" fill="#27272A"/>
+    <text x="890" y="25" 
+          font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+          font-size="14" 
+          font-weight="500" 
+          fill="#10B981"
+          text-anchor="middle">FOSSBilling</text>
+  </g>
+  
+  <!-- URL -->
+  <text x="100" y="580" 
+        font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" 
+        font-size="18" 
+        font-weight="400" 
+        fill="#52525B"
+        letter-spacing="1">aetheris.enterprise</text>
+</svg>

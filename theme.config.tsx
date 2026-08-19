@@ -57,9 +57,7 @@ const config: DocsThemeConfig = {
         property="og:description"
         content="Installation guides, Pterodactyl and Proxmox bridge configuration, custom adapter SDK and REST API reference."
       />
-      <link rel="icon" type="image/png" href="/icon.png" />
-      <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-      <link rel="apple-touch-icon" href="/app-icon.png" />
+      <link rel="icon" type="image/svg+xml" href="/icon.svg" />
       <meta name="theme-color" content="#09090B" />
     </>
   ),
