@@ -1,4 +1,18 @@
-# Aetheris Docs
+<p align="center">
+  <img src="../assets/icon.svg" alt="Aetheris" width="80">
+</p>
+
+<h1 align="center">Aetheris Docs</h1>
+
+<p align="center">
+  <strong>Wiki, installation guides, developer SDK and OpenAPI specifications</strong>
+</p>
+
+<p align="center">
+  <a href="https://aetheris-docs.vercel.app">Production</a>
+</p>
+
+---
 
 Wiki, installation guides, developer SDK and OpenAPI specifications for the
 Aetheris billing and virtualization platform.
