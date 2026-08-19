@@ -14,6 +14,10 @@ This wiki covers:
   SQLite, auth, billing and provisioning.
 - [Theming and whitelabeling](wiki/theming.md) - dark / light / system themes
   and runtime accents.
+- [Modules and integrations](wiki/addons.md) - extend the platform with
+  modules and integrations beyond themes.
+- [Integration store](wiki/store.md) - free ready-made integrations, i.e. the
+  accepted pull requests in the addons repository.
 - [Pterodactyl bridge](wiki/pterodactyl-bridge.md) - Application and Client API
   configuration, node synchronization and daemon requirements.
 - [Proxmox VE setup](wiki/proxmox-setup.md) - API v2 credentials, storage and
@@ -35,3 +39,6 @@ This wiki covers:
 | `aetheris-project/aetheris-app` | Billing core, admin control plane, drivers, client portal |
 | `aetheris-project/aetheris-docs` | This wiki, SDK and API specifications |
 | `aetheris-project/aetheris-installer` | Automated cross-platform installer |
+| `aetheris-project/aetheris-addons` | Modules and integrations, store and accepted PRs |
+| `aetheris-project/aetheris-ops` | System optimization scanner and update manager |
+| `aetheris-project/aetheris-themes` | Theme guide, templates and validator |

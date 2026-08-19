@@ -13,7 +13,11 @@ const withNextra = nextra({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  poweredByHeader: false
+  poweredByHeader: false,
+  i18n: {
+    locales: ["en", "it"],
+    defaultLocale: "en"
+  }
 };
 
 export default withNextra(nextConfig);

@@ -1,0 +1,12 @@
+{
+  "installation": "Guida all'installazione",
+  "installer": "Installer automatico",
+  "backend": "Backend Python",
+  "theming": "Temi e whitelabel",
+  "addons": "Moduli e integrazioni",
+  "store": "Store delle integrazioni",
+  "pterodactyl-bridge": "Bridge Pterodactyl",
+  "proxmox-setup": "Configurazione Proxmox VE",
+  "virtfusion-setup": "Configurazione VirtFusion",
+  "whitelabel": "Whitelabel dinamico"
+}

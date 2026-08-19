@@ -76,6 +76,10 @@ const config: DocsThemeConfig = {
       <meta name="theme-color" content="#09090B" />
     </>
   ),
+  i18n: [
+    { locale: "en", text: "English" },
+    { locale: "it", text: "Italiano" }
+  ],
   sidebar: {
     defaultMenuCollapseLevel: 1
   },

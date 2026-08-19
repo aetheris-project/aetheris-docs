@@ -3,6 +3,8 @@
   "installer": "Automated installer",
   "backend": "Python backend",
   "theming": "Theming and whitelabeling",
+  "addons": "Modules and integrations",
+  "store": "Integration store",
   "pterodactyl-bridge": "Pterodactyl bridge",
   "proxmox-setup": "Proxmox VE setup",
   "virtfusion-setup": "VirtFusion setup",
