@@ -6,8 +6,14 @@ a single control plane.
 
 This wiki covers:
 
-- [Installation guide](wiki/installation.md) - bare-metal deployment on Ubuntu
-  22.04 LTS and Debian 12, automated and manual paths.
+- [Installation guide](wiki/installation.md) - per-OS deployment on Linux,
+  Windows and macOS, automated and manual paths.
+- [Automated installer](wiki/installer.md) - archinstall-style TUI wizard and
+  non-interactive `--yes` mode with native service generation.
+- [Python backend](wiki/backend.md) - self-contained FastAPI REST API with
+  SQLite, auth, billing and provisioning.
+- [Theming and whitelabeling](wiki/theming.md) - dark / light / system themes
+  and runtime accents.
 - [Pterodactyl bridge](wiki/pterodactyl-bridge.md) - Application and Client API
   configuration, node synchronization and daemon requirements.
 - [Proxmox VE setup](wiki/proxmox-setup.md) - API v2 credentials, storage and
@@ -25,6 +31,7 @@ This wiki covers:
 
 | Repository | Purpose |
 | --- | --- |
-| `aetheris-enterprise/aetheris-website` | Marketing site, interactive demo, dynamic SEO |
-| `aetheris-enterprise/aetheris-app` | Billing core, admin control plane, drivers, client portal |
-| `aetheris-enterprise/aetheris-docs` | This wiki, SDK and API specifications |
+| `aetheris-project/aetheris-website` | Marketing site, interactive demo, dynamic SEO |
+| `aetheris-project/aetheris-app` | Billing core, admin control plane, drivers, client portal |
+| `aetheris-project/aetheris-docs` | This wiki, SDK and API specifications |
+| `aetheris-project/aetheris-installer` | Automated cross-platform installer |

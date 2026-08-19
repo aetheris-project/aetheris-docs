@@ -43,19 +43,34 @@ const config: DocsThemeConfig = {
     </div>
   ),
   project: {
-    link: "https://github.com/aetheris-enterprise"
+    link: "https://github.com/aetheris-project"
   },
-  docsRepositoryBase: "https://github.com/aetheris-enterprise/aetheris-docs",
+  docsRepositoryBase: "https://github.com/aetheris-project/aetheris-docs",
   footer: {
     text: "Aetheris documentation. Billing and virtualization control plane for the enterprise."
   },
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Aetheris Documentation</title>
+      <meta
+        name="description"
+        content="Installation guides for Linux, Windows and macOS, Pterodactyl and Proxmox bridge configuration, the automated installer, Python backend API, custom adapter SDK and REST API reference."
+      />
+      <link rel="canonical" href="https://aetheris-docs.vercel.app" />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Aetheris Documentation" />
       <meta property="og:title" content="Aetheris Documentation" />
       <meta
         property="og:description"
-        content="Installation guides, Pterodactyl and Proxmox bridge configuration, custom adapter SDK and REST API reference."
+        content="Installation guides for Linux, Windows and macOS, Pterodactyl and Proxmox bridge configuration, the automated installer, Python backend API, custom adapter SDK and REST API reference."
+      />
+      <meta property="og:url" content="https://aetheris-docs.vercel.app" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Aetheris Documentation" />
+      <meta
+        name="twitter:description"
+        content="Installation guides, bridge configuration, installer and API reference for the Aetheris control plane."
       />
       <link rel="icon" type="image/svg+xml" href="/icon.svg" />
       <meta name="theme-color" content="#09090B" />
