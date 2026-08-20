@@ -1,0 +1,79 @@
+{
+  "index": "Home",
+  "--- Iniziare": {
+    "type": "separator",
+    "title": "Iniziare"
+  },
+  "installation": "Guida all'installazione",
+  "system-requirements": "Requisiti di sistema",
+  "environment-variables": "Variabili d'ambiente",
+  "--- Piattaforme": {
+    "type": "separator",
+    "title": "Piattaforme"
+  },
+  "linux-setup": "Setup Linux",
+  "windows-setup": "Setup Windows",
+  "macos-setup": "Setup macOS",
+  "docker": "Deploy con Docker",
+  "--- Infrastruttura": {
+    "type": "separator",
+    "title": "Infrastruttura"
+  },
+  "architecture": "Architettura",
+  "database": "Database",
+  "redis": "Redis",
+  "ports": "Porte e rete",
+  "reverse-proxy": "Reverse proxy",
+  "ssl-tls": "SSL / TLS",
+  "--- Piattaforma": {
+    "type": "separator",
+    "title": "Piattaforma"
+  },
+  "backend": "Backend Python",
+  "admin-panel": "Pannello admin",
+  "client-portal": "Portale client",
+  "user-management": "Gestione utenti",
+  "api-authentication": "Autenticazione API",
+  "server-provisioning": "Provisioning server",
+  "node-management": "Gestione nodi",
+  "cron-jobs": "Job schedulati",
+  "sftp": "Utenti SFTP",
+  "vnc-console": "Console VNC",
+  "--- Fatturazione": {
+    "type": "separator",
+    "title": "Fatturazione"
+  },
+  "billing": "Motore di fatturazione",
+  "billing-plans": "Piani di fatturazione",
+  "--- Hypervisor": {
+    "type": "separator",
+    "title": "Hypervisor"
+  },
+  "pterodactyl-bridge": "Bridge Pterodactyl",
+  "proxmox-setup": "Setup Proxmox VE",
+  "virtfusion-setup": "Setup VirtFusion",
+  "--- Personalizzazione": {
+    "type": "separator",
+    "title": "Personalizzazione"
+  },
+  "theming": "Temi",
+  "whitelabel": "Whitelabeling",
+  "game-hosting": "Game hosting",
+  "addons": "Moduli",
+  "store": "Store integrazioni",
+  "--- Operazioni": {
+    "type": "separator",
+    "title": "Operazioni"
+  },
+  "security": "Sicurezza",
+  "backup-and-restore": "Backup e ripristino",
+  "monitoring": "Monitoraggio",
+  "upgrades": "Aggiornamenti",
+  "troubleshooting": "Troubleshooting",
+  "--- Riferimento": {
+    "type": "separator",
+    "title": "Riferimento"
+  },
+  "development": "Sviluppo",
+  "glossary": "Glossario"
+}

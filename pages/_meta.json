@@ -1,0 +1,106 @@
+{
+  "index": "Home",
+  "--- Getting started": {
+    "type": "separator",
+    "title": "Getting started"
+  },
+  "installation": "Installation guide",
+  "installation-automated": "Automated installer",
+  "installation-docker": "Docker installation",
+  "installation-linux": "Linux production",
+  "installation-windows": "Windows installation",
+  "installation-macos": "macOS installation",
+  "installation-verify": "Verification checklist",
+  "system-requirements": "System requirements",
+  "environment-variables": "Environment variables",
+  "--- Platforms": {
+    "type": "separator",
+    "title": "Platforms"
+  },
+  "linux-setup": "Linux setup",
+  "windows-setup": "Windows setup",
+  "macos-setup": "macOS setup",
+  "docker": "Docker deployment",
+  "--- Infrastructure": {
+    "type": "separator",
+    "title": "Infrastructure"
+  },
+  "architecture": "Architecture",
+  "architecture-deployment": "Deployment topologies",
+  "database": "Database",
+  "redis": "Redis",
+  "ports": "Ports and networking",
+  "reverse-proxy": "Reverse proxy",
+  "ssl-tls": "SSL / TLS",
+  "prisma": "Prisma",
+  "--- Platform": {
+    "type": "separator",
+    "title": "Platform"
+  },
+  "backend": "Python backend",
+  "backend-api": "Backend API reference",
+  "admin-panel": "Admin panel",
+  "client-portal": "Client portal",
+  "user-management": "User management",
+  "api-authentication": "API authentication",
+  "server-provisioning": "Server provisioning",
+  "node-management": "Node management",
+  "cron-jobs": "Cron jobs",
+  "sftp": "SFTP users",
+  "vnc-console": "VNC console",
+  "webhooks": "Webhooks",
+  "logging": "Logging",
+  "--- Billing": {
+    "type": "separator",
+    "title": "Billing"
+  },
+  "billing": "Billing engine",
+  "billing-invoicing": "Invoicing and dunning",
+  "billing-plans": "Billing plans",
+  "--- Hypervisors": {
+    "type": "separator",
+    "title": "Hypervisors"
+  },
+  "pterodactyl-bridge": "Pterodactyl bridge",
+  "proxmox-setup": "Proxmox VE setup",
+  "virtfusion-setup": "VirtFusion setup",
+  "--- Customization": {
+    "type": "separator",
+    "title": "Customization"
+  },
+  "theming": "Theming",
+  "theming-tokens": "Token reference",
+  "whitelabel": "Whitelabeling",
+  "whitelabel-api": "Whitelabel API",
+  "game-hosting": "Game hosting",
+  "game-hosting-catalog": "Game catalog",
+  "addons": "Modules",
+  "store": "Integration store",
+  "--- Operations": {
+    "type": "separator",
+    "title": "Operations"
+  },
+  "security": "Security",
+  "security-hardening": "Hardening checklist",
+  "backup-and-restore": "Backup and restore",
+  "backup-runbooks": "Backup runbooks",
+  "monitoring": "Monitoring",
+  "upgrades": "Upgrades",
+  "updates": "Updates",
+  "troubleshooting": "Troubleshooting",
+  "troubleshooting-services": "Service issues",
+  "troubleshooting-networking": "Network issues",
+  "--- Reference": {
+    "type": "separator",
+    "title": "Reference"
+  },
+  "development": "Development",
+  "development-conventions": "Code conventions",
+  "installer": "Installer reference",
+  "installer-cli": "Installer CLI",
+  "windows-installer": "Windows Installer",
+  "windows-installer-setup": "Windows Installer setup",
+  "windows-installer-cli": "Windows Installer CLI",
+  "windows-installer-dev": "Windows Installer dev",
+  "glossary": "Glossary"
+}
