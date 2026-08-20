@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: Aetheris Control Plane API
+  title: Aetheris Control Panel API
   version: 1.0.0
   description: >
     Billing and virtualization management API. Unifies server lifecycle across
@@ -18,7 +18,7 @@ tags:
   - name: whitelabel
     description: Dynamic tenant branding
   - name: admin
-    description: Control plane administration
+    description: Control panel administration
 paths:
   /whitelabel:
     get:

@@ -1,6 +1,6 @@
 # Installation guide
 
-This guide covers deploying the Aetheris control plane on Linux, Windows
+This guide covers deploying the Aetheris control panel on Linux, Windows
 and macOS, both with the automated installer (`aetheris-installer`) and
 manually. The platform is one billing engine, one client portal and one
 set of hypervisor drivers (Pterodactyl, Proxmox VE, VirtFusion).
@@ -212,7 +212,7 @@ await prisma.$disconnect();
 
 ```ini
 [Unit]
-Description=Aetheris control plane (Next.js)
+Description=Aetheris control panel (Next.js)
 After=network.target postgresql.service redis-server.service
 Wants=network.target
 

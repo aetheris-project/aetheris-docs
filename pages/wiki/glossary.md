@@ -6,13 +6,13 @@ documentation.
 | Term | Definition |
 | --- | --- |
 | Account | An identity that signs in to the portal; may own servers and invoices. |
-| Admin panel | The operator-facing area of the control plane: nodes, plans, billing, whitelabel. |
+| Admin panel | The operator-facing area of the control panel: nodes, plans, billing, whitelabel. |
 | Allocation | A slice of a node's resources (IP, port range, CPU, RAM, disk) assignable to servers. |
 | API key | A long-lived machine credential for calling the REST API. |
 | Audit log | Append-only record of every privileged action: who, what, when, from which IP. |
 | Billing engine | The subsystem that turns plans into invoices, proration and dunning. |
 | Client portal | The end-user area: servers, console, backups, invoices, payments. |
-| Control plane | The whole management layer (web + API + workers) that runs the platform. |
+| Control panel | The whole management layer (web + API + workers) that runs the platform. |
 | Driver | A typed integration with an external system (Pterodactyl, Proxmox VE, VirtFusion). |
 | Dunning | The automated process of retrying failed payments and escalating reminders. |
 | Egg | A Pterodactyl container specification that defines how a server image runs. |

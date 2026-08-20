@@ -40,7 +40,7 @@ A full configuration object looks like this:
 {
   "brand": {
     "name": "Aetheris",
-    "tagline": "Billing and virtualization control plane",
+    "tagline": "Billing and virtualization control panel",
     "logoUrl": "https://cdn.example.com/logo.svg",
     "domain": "aetheris-web.vercel.app"
   },

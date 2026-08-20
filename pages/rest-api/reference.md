@@ -1,6 +1,6 @@
 # REST API reference
 
-The Aetheris control plane exposes a JSON REST API. This page summarizes the
+The Aetheris control panel exposes a JSON REST API. This page summarizes the
 platform endpoints; the machine-readable contract is the bundled
 [OpenAPI 3.1 specification](../public/openapi.yaml).
 

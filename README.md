@@ -23,7 +23,7 @@ Aetheris billing and virtualization platform.
 ## Overview
 
 Aetheris converges WHMCS, FOSSBilling, Pterodactyl Panel, Proxmox VE and
-VirtFusion into a single enterprise control plane. This repository documents
+VirtFusion into a single enterprise control panel. This repository documents
 every surface of the platform:
 
 - Per-OS installation guides for **Linux (systemd/Nginx/Certbot)**,
@@ -100,7 +100,7 @@ The repository is linked to the `aetheris-docs` project on Vercel; pushes to
 - [aetheris-website](https://github.com/aetheris-project/aetheris-website) -
   marketing site and interactive product demo
 - [aetheris-app](https://github.com/aetheris-project/aetheris-app) - billing
-  core, admin control plane and hypervisor drivers
+  core, admin control panel and hypervisor drivers
 - [aetheris-installer](https://github.com/aetheris-project/aetheris-installer) -
   automated cross-platform installer
 

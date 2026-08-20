@@ -5,7 +5,7 @@ bridge. Every game is a first-class citizen: a **Pterodactyl egg** in the
 [aetheris-game-eggs](https://github.com/aetheris-project/aetheris-game-eggs)
 repository, a **runtime image** published to the GitHub Container Registry, and
 a **catalog entry** with resource presets and retail pricing served by the
-Aetheris control plane API.
+Aetheris control panel API.
 
 ## Catalog
 
@@ -117,7 +117,7 @@ php artisan p:egg:import /path/to/aetheris-game-eggs/eggs/minecraft/java/egg.jso
 
 ## Ordering a server
 
-The control plane provisions game servers through the Pterodactyl driver:
+The control panel provisions game servers through the Pterodactyl driver:
 
 1. The client picks a game and a preset from `/api/catalog/games`.
 2. The billing engine creates a pending invoice for the preset price

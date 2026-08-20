@@ -1,7 +1,7 @@
 # Windows Installer
 
 The `aetheris-windows-installer` repository ships the official way to run
-the Aetheris control plane on Windows 10/11. The platform itself runs as a
+the Aetheris control panel on Windows 10/11. The platform itself runs as a
 Docker stack (web, worker, Python backend, PostgreSQL, Redis); this
 installer manages everything around it - dependency installation, cloning
 and starting the stack, and a complete teardown.
@@ -102,13 +102,13 @@ After a successful install, the following containers run (from
 
 | Service | Purpose | Port |
 | --- | --- | --- |
-| `aetheris-web` | Next.js control plane | 3000 |
+| `aetheris-web` | Next.js control panel | 3000 |
 | `aetheris-worker` | BullMQ background worker | - |
 | `aetheris-backend` | FastAPI Python API | 8000 |
 | `aetheris-postgres` | PostgreSQL database | 5432 |
 | `aetheris-redis` | Queue and cache | 6379 |
 
-Open <http://127.0.0.1:3000> for the control plane and
+Open <http://127.0.0.1:3000> for the control panel and
 <http://127.0.0.1:8000/docs> for the interactive API documentation.
 
 ## Verifying the install

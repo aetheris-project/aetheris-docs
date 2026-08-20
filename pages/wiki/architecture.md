@@ -1,6 +1,6 @@
 # Architecture
 
-This page describes how the Aetheris control plane is built and how its
+This page describes how the Aetheris control panel is built and how its
 components communicate. It is the map you need before deploying, extending
 or debugging the platform.
 
@@ -41,7 +41,7 @@ flowchart LR
 ## The web layer
 
 The web application is a Next.js App Router application written in strict
-TypeScript. It renders the client portal and the admin control plane with
+TypeScript. It renders the client portal and the admin control panel with
 server-side rendering, which keeps time-to-first-byte low and makes the
 platform crawlable.
 
@@ -124,7 +124,7 @@ For fleets above a few hundred servers, split the stack:
 
 ### Multi-region
 
-The control plane is regional: each region owns its nodes, PostgreSQL and
+The control panel is regional: each region owns its nodes, PostgreSQL and
 Redis. The web tier can be served from a CDN in front of any region. Cross
 -region features (for example global billing) are built on the webhook and
 sync queues.

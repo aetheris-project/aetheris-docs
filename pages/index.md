@@ -2,7 +2,7 @@
 
 Aetheris is an enterprise billing and virtualization management platform that
 converges WHMCS, FOSSBilling, Pterodactyl Panel, Proxmox VE and VirtFusion into
-a single control plane: one billing engine, one client portal and one set of
+a single control panel: one billing engine, one client portal and one set of
 hypervisor drivers, with total admin control and dynamic whitelabeling.
 
 ## Getting started

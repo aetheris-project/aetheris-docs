@@ -1,6 +1,6 @@
 # Python backend
 
-The control plane ships a self-contained Python REST API in
+The control panel ships a self-contained Python REST API in
 `aetheris-app/backend`. It provides authentication, node management,
 server provisioning, billing and whitelabel themes on a zero-configuration
 SQLite database, so development and demos run without PostgreSQL or Redis.

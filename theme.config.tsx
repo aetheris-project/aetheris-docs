@@ -56,7 +56,7 @@ const config: DocsThemeConfig = {
     const config = useConfig();
     const title = `${config.title}${config.title ? " - " : ""}Aetheris Docs`;
     const description =
-      "Documentation for the Aetheris billing and virtualization control plane: installation, architecture, hypervisor bridges (Pterodactyl, Proxmox VE, VirtFusion), the automated installers, the Python backend API and the REST API reference.";
+      "Documentation for the Aetheris billing and virtualization control panel: installation, architecture, hypervisor bridges (Pterodactyl, Proxmox VE, VirtFusion), the automated installers, the Python backend API and the REST API reference.";
 
     return (
       <>
@@ -105,7 +105,7 @@ const config: DocsThemeConfig = {
   footer: {
     text: (
       <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem", width: "100%" }}>
-        <span>Aetheris documentation - billing and virtualization control plane for the enterprise.</span>
+        <span>Aetheris documentation - billing and virtualization control panel for the enterprise.</span>
         <span style={{ fontSize: "0.8em", opacity: 0.7 }}>
           <a href={`${GITHUB}/aetheris-app`} style={{ color: "inherit" }}>
             aetheris-app

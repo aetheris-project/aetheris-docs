@@ -2,7 +2,7 @@
 
 The `aetheris-installer` repository ships an archinstall-style terminal
 wizard and a fully scriptable non-interactive mode for deploying the
-Aetheris control plane on Linux, macOS and Windows. It creates the
+Aetheris control panel on Linux, macOS and Windows. It creates the
 deployment layout, writes environment files, installs dependencies,
 generates native service units for the detected operating system and
 verifies the result.
@@ -46,7 +46,7 @@ Components you can toggle:
 | Component | Installs |
 | --- | --- |
 | Website | Marketing site and interactive demo |
-| App | Control plane, billing engine, hypervisor drivers |
+| App | Control panel, billing engine, hypervisor drivers |
 | Backend | Python REST API (FastAPI, SQLite) |
 | Docs | Nextra wiki (optional) |
 | Services | systemd / launchd / Windows Task Scheduler units |
