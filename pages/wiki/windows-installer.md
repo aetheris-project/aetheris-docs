@@ -39,6 +39,8 @@ and run it. Double-clicking opens the interactive TUI wizard.
 | Start / stop | `docker compose up -d` / `docker compose stop` (volumes kept) |
 | Status | `docker compose ps`, colored per container state |
 | Logs console | Live `docker compose logs -f` inside the wizard |
+| Update installer | Checks the GitHub Releases feed and self-updates with confirmation |
+| Update software | `docker compose pull` + `up -d` to the latest images (data kept) |
 | Uninstall | Stops the stack, removes volumes and the application directory |
 
 ## Interactive wizard
@@ -48,7 +50,7 @@ open the curses TUI wizard with arrow-key navigation, a box-drawing frame
 and the Aetheris accent color. On terminals without curses support the
 wizard falls back to plain-text prompts automatically.
 
-The main menu is split into two sections:
+The main menu is split into three sections:
 
 **Setup** - first-time installation:
 
@@ -69,6 +71,20 @@ The main menu is split into two sections:
    kept, so the next start is fast).
 8. **Console - live stack logs** - streams `docker compose logs -f` in
    real time with the service name highlighted in the accent color.
+
+**Updates** - keep everything current:
+
+9. **Update the installer** - checks the GitHub Releases feed for a newer
+   build of the wizard itself, downloads the executable and applies it. A
+   banner on the main menu announces an available update as soon as the
+   wizard starts. The wizard closes and relaunches as the new version
+   automatically.
+10. **Update Aetheris software** - pulls the latest container images
+    (`docker compose pull`) and recreates the containers (`docker compose
+    up -d`). Volumes and data are kept; a short downtime occurs.
+
+Update actions always ask for confirmation **twice**: the first Enter arms
+ the action, the second one starts it.
 
 ### TUI keys
 
@@ -94,6 +110,9 @@ The exe is fully scriptable:
 | `--stop` | Stop the stack, keeping containers and volumes |
 | `--logs` | Print the last `--tail` lines of the whole stack |
 | `--tail N` | Number of log lines for `--logs` (default 200) |
+| `--update-stack` | Update the software to the latest images (`compose pull` + `up -d`) |
+| `--update` | Self-update the installer (asks for confirmation twice) |
+| `--update-check` | Check whether a newer installer release exists |
 | `--db postgres\|sqlite` | Database engine used by the stack commands |
 | `--no-env` | Skip writing the `.env` file now |
 | `--dry-run` | Print every command without executing anything |
@@ -113,9 +132,16 @@ aetheris-windows-installer --deps
 
 # Day-to-day management
 aetheris-windows-installer --status
-naetheris-windows-installer --start
-naetheris-windows-installer --stop
-naetheris-windows-installer --logs --tail 300
+aetheris-windows-installer --start
+aetheris-windows-installer --stop
+aetheris-windows-installer --logs --tail 300
+
+# Update the software to the latest images
+aetheris-windows-installer --update-stack
+
+# Self-update the installer (asks for confirmation)
+aetheris-windows-installer --update
+aetheris-windows-installer --update-check
 
 # Tear everything down
 aetheris-windows-installer --uninstall
@@ -227,7 +253,7 @@ bundle). The curses-based TUI falls back to plain prompts when
 `windows-curses` is not bundled.
 
 ```bash
-# Run the test suite (40+ tests)
+# Run the test suite (70+ tests)
 .venv\Scripts\python -m pytest -q
 ```
 
