@@ -36,6 +36,9 @@ and run it. Double-clicking opens the interactive TUI wizard.
 | Node.js LTS | Optional dependency install via winget |
 | Python 3.12 | Optional dependency install via winget |
 | The stack | Clones `aetheris-app` and runs `docker compose up -d --build` |
+| Start / stop | `docker compose up -d` / `docker compose stop` (volumes kept) |
+| Status | `docker compose ps`, colored per container state |
+| Logs console | Live `docker compose logs -f` inside the wizard |
 | Uninstall | Stops the stack, removes volumes and the application directory |
 
 ## Interactive wizard
@@ -45,24 +48,35 @@ open the curses TUI wizard with arrow-key navigation, a box-drawing frame
 and the Aetheris accent color. On terminals without curses support the
 wizard falls back to plain-text prompts automatically.
 
-Steps in the wizard:
+The main menu is split into two sections:
 
-1. **Welcome** - summary of what will be installed.
-2. **Target directory** - choose where `aetheris-app` will live.
-3. **Environment file** - write `.env` now (recommended) or later manually.
-4. **Database engine** - PostgreSQL container (default) or a local SQLite
-   `.db` file (recommended for tests).
-5. **Dependency check** - verify Docker Desktop, git, Node.js and Python.
-6. **Install** - winget installs missing dependencies, the app is cloned,
-   the stack starts, and the result is verified.
+**Setup** - first-time installation:
+
+1. **Install dependencies only** - winget installs Docker Desktop, Git,
+   Node.js LTS and Python.
+2. **Install software only** - clone `aetheris-app` and start the Docker
+   stack.
+3. **Install dependencies and software** - full setup in one pass.
+4. **Uninstall** - stop the stack, remove the volumes and the app
+   directory.
+
+**Manage the stack** - day-to-day operations after installation:
+
+5. **Stack status** - `docker compose ps`, colored per service state
+   (running green, exited red, restarting amber).
+6. **Start the stack** - `docker compose up -d`.
+7. **Stop the stack** - `docker compose stop` (containers and volumes are
+   kept, so the next start is fast).
+8. **Console - live stack logs** - streams `docker compose logs -f` in
+   real time with the service name highlighted in the accent color.
 
 ### TUI keys
 
 | Key | Action |
 | --- | --- |
-| Up / Down | Move the selection |
+| Up / Down or j / k | Move the selection |
 | Space / Enter | Confirm and advance |
-| q / Esc | Back / quit |
+| q / Esc | Back / quit / stop following the log console |
 
 ## Command line
 
@@ -70,12 +84,18 @@ The exe is fully scriptable:
 
 | Flag | Effect |
 | --- | --- |
-| `--yes` | Non-interactive mode with defaults (CI-friendly) |
-| `--target PATH` | Target directory for the checkout |
+| `--dir PATH` | Target directory for the checkout |
 | `--deps` | Install dependencies only (Docker Desktop, Git, Node, Python) |
 | `--software` | Install the stack only (clone + `compose up`) |
 | `--both` | Dependencies and stack |
 | `--uninstall` | Stop the stack, remove volumes and the app directory |
+| `--status` | Show the running state of every container (`docker compose ps`) |
+| `--start` | Bring the stack up (`docker compose up -d`) |
+| `--stop` | Stop the stack, keeping containers and volumes |
+| `--logs` | Print the last `--tail` lines of the whole stack |
+| `--tail N` | Number of log lines for `--logs` (default 200) |
+| `--db postgres\|sqlite` | Database engine used by the stack commands |
+| `--no-env` | Skip writing the `.env` file now |
 | `--dry-run` | Print every command without executing anything |
 | `--version` | Print the version and exit |
 
@@ -86,14 +106,24 @@ The exe is fully scriptable:
 aetheris-windows-installer --both --dry-run
 
 # Full non-interactive install with a custom target
-aetheris-windows-installer --both --target D:\aetheris
+aetheris-windows-installer --both --dir D:\aetheris
 
 # Dependencies only (you already cloned the repo manually)
 aetheris-windows-installer --deps
 
+# Day-to-day management
+aetheris-windows-installer --status
+naetheris-windows-installer --start
+naetheris-windows-installer --stop
+naetheris-windows-installer --logs --tail 300
+
 # Tear everything down
 aetheris-windows-installer --uninstall
 ```
+
+Management commands (`--status`, `--start`, `--stop`, `--logs`) resolve the
+compose file automatically: the engine recorded in the installed `.env`
+(`AETHERIS_DB_MODE`) wins, otherwise the `--db` flag decides.
 
 ## The Docker stack
 
@@ -110,6 +140,32 @@ After a successful install, the following containers run (from
 
 Open <http://127.0.0.1:3000> for the control panel and
 <http://127.0.0.1:8000/docs> for the interactive API documentation.
+
+## Managing the stack
+
+Everything the wizard can do is also available as plain commands, both from
+the installer itself (see `--status` / `--start` / `--stop` / `--logs`
+above) and from the app repository, which ships a cross-platform manager:
+
+```powershell
+# From the aetheris-app checkout, on Windows (Docker Desktop)
+powershell -ExecutionPolicy Bypass -File scripts\manage.ps1 status
+powershell -ExecutionPolicy Bypass -File scripts\manage.ps1 start
+powershell -ExecutionPolicy Bypass -File scripts\manage.ps1 stop
+powershell -ExecutionPolicy Bypass -File scripts\manage.ps1 logs -Follow
+powershell -ExecutionPolicy Bypass -File scripts\manage.ps1 down
+```
+
+```bash
+# From the aetheris-app checkout, on Linux / macOS / Git Bash
+bash scripts/manage.sh status
+bash scripts/manage.sh start
+bash scripts/manage.sh logs -f
+```
+
+Both scripts read `AETHERIS_DB_MODE` from the local `.env` and select
+`docker-compose.sqlite.yml` automatically, so they always manage the stack
+exactly as it was installed.
 
 ## Verifying the install
 
