@@ -16,54 +16,60 @@ html {
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   background:
     radial-gradient(1100px 480px at 8% -12%, rgba(16, 185, 129, 0.12), transparent 55%),
     radial-gradient(800px 360px at 100% 0%, rgba(5, 150, 105, 0.08), transparent 60%),
     var(--aetheris-bg) !important;
 }
 
+/* Film-grain texture — z-index 1 so it stays behind all UI layers. */
 body::before {
   content: "";
   pointer-events: none;
   position: fixed;
   inset: 0;
-  z-index: 80;
+  z-index: 1;
   opacity: 0.03;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+
+/* ── Navbar ──────────────────────────────────────────────────────────── */
 
 .nextra-nav-container {
   backdrop-filter: blur(20px);
 }
 
 .nextra-nav-container-blur {
-  background: rgba(9, 9, 11, 0.72) !important;
+  background: rgba(9, 9, 11, 0.78) !important;
   border-bottom: 1px solid rgba(39, 39, 42, 0.85) !important;
 }
 
+/* ── Sidebar ─────────────────────────────────────────────────────────── */
+
 .nextra-sidebar-container {
-  background: transparent !important;
+  background: rgba(9, 9, 11, 0.55) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(39, 39, 42, 0.6) !important;
 }
 
 .nextra-toc {
   background: transparent !important;
 }
 
+/* ── Article content ─────────────────────────────────────────────────── */
+
 article a {
+  color: var(--aetheris-accent);
   text-underline-offset: 0.18em;
+  transition: color 0.15s ease;
 }
 
-pre,
-.nextra-code-block pre {
-  border: 1px solid var(--aetheris-border) !important;
-  border-radius: 0.9rem !important;
-  background: #0c0c0f !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-code {
-  border-radius: 0.35rem;
+article a:hover {
+  color: #34d399;
 }
 
 article h1,
@@ -72,27 +78,113 @@ article h3 {
   letter-spacing: -0.03em;
 }
 
+/* ── Code blocks ─────────────────────────────────────────────────────── */
+
+pre,
+.nextra-code-block pre {
+  border: 1px solid var(--aetheris-border) !important;
+  border-radius: 0.75rem !important;
+  background: #0c0c0f !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+code {
+  border-radius: 0.35rem;
+}
+
+/* Inline code inside paragraphs */
+article code:not(pre code) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0.15em 0.35em;
+  font-size: 0.88em;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────── */
+
+article table {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--aetheris-border) !important;
+}
+
+article thead {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+article tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+article tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ── Cards (nextra feature cards) ────────────────────────────────────── */
+
 .nextra-card {
   border-radius: 1rem !important;
   border-color: var(--aetheris-border) !important;
-  background: color-mix(in srgb, var(--aetheris-surface) 88%, transparent) !important;
-  box-shadow: 0 18px 40px -28px rgb(0 0 0 / 0.7);
+  background: rgba(20, 20, 24, 0.88) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 18px 40px -28px rgb(0 0 0 / 0.7);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .nextra-card:hover {
-  border-color: color-mix(in srgb, var(--aetheris-accent) 40%, var(--aetheris-border)) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 18px 40px -28px rgb(0 0 0 / 0.7),
+    0 0 0 1px rgba(16, 185, 129, 0.08);
 }
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
 
 footer {
   border-top: 1px solid var(--aetheris-border) !important;
-  background: color-mix(in srgb, var(--aetheris-surface) 80%, transparent) !important;
+  background: rgba(9, 9, 11, 0.8) !important;
 }
+
+/* ── Selection ───────────────────────────────────────────────────────── */
 
 ::selection {
   background: rgba(16, 185, 129, 0.22);
+  color: #fafafa;
 }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────── */
 
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--aetheris-border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--aetheris-border);
+  border-radius: 6px;
+}
+
+/* ── Blockquotes (callouts / notes) ──────────────────────────────────── */
+
+article blockquote {
+  border-left: 3px solid var(--aetheris-accent) !important;
+  background: rgba(16, 185, 129, 0.06) !important;
+  border-radius: 0 0.5rem 0.5rem 0;
+  padding: 0.75rem 1rem;
+}
+
+/* ── Horizontal rules ────────────────────────────────────────────────── */
+
+article hr {
+  border-color: var(--aetheris-border) !important;
+  opacity: 0.6;
 }
