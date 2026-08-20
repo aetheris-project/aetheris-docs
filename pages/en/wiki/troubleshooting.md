@@ -152,3 +152,6 @@ Collect this information before opening an issue on
 2. The exact error message and the step that produced it.
 3. The versions: `docker compose version`, platform version from the admin
    footer, and the OS.
+
+For commercial support or a guaranteed response time, contact
+**hello@another-horizon.eu** with the information above already attached.

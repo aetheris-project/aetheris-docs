@@ -59,3 +59,10 @@ hypervisor drivers, with total admin control and dynamic whitelabeling.
 - [REST API reference](api/reference.md) - the complete OpenAPI-based API
   documentation.
 - [OpenAPI specification](https://github.com/aetheris-project/aetheris-docs/blob/main/public/openapi.yaml) - machine-readable API contract.
+
+## Support
+
+For commercial support, licensing questions, custom integrations or
+partnerships, write to **hello@another-horizon.eu**. Bug reports and feature
+requests belong on the issue trackers of the individual repositories under the
+[`aetheris-project`](https://github.com/aetheris-project) organization.

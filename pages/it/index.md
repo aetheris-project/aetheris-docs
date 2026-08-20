@@ -60,3 +60,10 @@ admin totale e whitelabeling dinamico.
 - [Riferimento API REST](api/reference.md) - la documentazione API completa
   basata su OpenAPI.
 - [Specifica OpenAPI](https://github.com/aetheris-project/aetheris-docs/blob/main/public/openapi.yaml) - contratto API machine-readable.
+
+## Supporto
+
+Per supporto commerciale, domande sulle licenze, integrazioni personalizzate o
+partnership, scrivi a **hello@another-horizon.eu**. Segnalazioni di bug e
+richieste di funzionalità vanno nei tracker dei singoli repository
+sotto l'organizzazione [`aetheris-project`](https://github.com/aetheris-project).

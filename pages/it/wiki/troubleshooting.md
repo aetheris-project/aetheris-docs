@@ -157,3 +157,6 @@ Raccogli queste informazioni prima di aprire un issue su
 2. Il messaggio di errore esatto e lo step che lo ha prodotto.
 3. Le versioni: `docker compose version`, versione della piattaforma dal
    footer admin e l'OS.
+
+Per supporto commerciale o tempi di risposta garantiti, contatta
+**hello@another-horizon.eu** con le informazioni sopra già allegate.
