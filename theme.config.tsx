@@ -28,6 +28,7 @@ function Logo() {
           fill="none"
           stroke="url(#docLogoGrad)"
           strokeWidth="3"
+          style={{ filter: "drop-shadow(0 0 6px rgba(16,185,129,0.55))" }}
         />
         <path
           d="M32 8 L52 20 L52 44 L32 56 L12 44 L12 20 Z"
@@ -39,7 +40,7 @@ function Logo() {
           fill="url(#docLogoGrad)"
         />
       </svg>
-      <span style={{ fontWeight: 700, letterSpacing: "-0.01em" }}>Aetheris Docs</span>
+      <span style={{ fontWeight: 700, letterSpacing: "-0.02em" }}>Aetheris Docs</span>
     </div>
   );
 }
@@ -77,6 +78,10 @@ const config: DocsThemeConfig = {
         <meta name="color-scheme" content="dark" />
       </>
     );
+  },
+  darkMode: true,
+  nextThemes: {
+    defaultTheme: "dark"
   },
   primaryHue: { dark: 160, light: 160 },
   primarySaturation: { dark: 84, light: 84 },
