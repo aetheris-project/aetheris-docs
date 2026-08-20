@@ -30,7 +30,7 @@ the gateway or utility you need. The community and maintainers can pick it up.
 
 ## Published modules
 
-See the [website store](https://aetheris.enterprise/store) for the live list,
+See the [website store](https://aetheris-web.vercel.app/store) for the live list,
 or read `store.json` directly in the addons repository. Categories currently
 available:
 

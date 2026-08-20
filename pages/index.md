@@ -58,7 +58,7 @@ hypervisor drivers, with total admin control and dynamic whitelabeling.
 
 - [Development](wiki/development.md) - repository layout, local setup, code
   conventions and the release workflow.
-- [REST API reference](api/reference.md) - the complete OpenAPI-based API
+- [REST API reference](rest-api/reference.md) - the complete OpenAPI-based API
   documentation.
 - [OpenAPI specification](https://github.com/aetheris-project/aetheris-docs/blob/main/public/openapi.yaml) - machine-readable API contract.
 

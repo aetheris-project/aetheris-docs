@@ -126,9 +126,9 @@ Run the test suite: `python -m pytest -q`.
 
 ## Contributing documentation
 
-Wiki pages live in `aetheris-docs/pages/en/wiki` (English) and
-`aetheris-docs/pages/it/wiki` (Italian). Keep both languages in sync when
-you change a page. Run the docs build to verify:
+Wiki pages live in `aetheris-docs/pages/wiki` (single language, English).
+Each page is a Markdown file; the sidebar order is defined by
+`pages/wiki/_meta.json`. Run the docs build to verify:
 
 ```bash
 cd aetheris-docs

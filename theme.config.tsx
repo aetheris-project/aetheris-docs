@@ -1,14 +1,20 @@
 import type { DocsThemeConfig } from "nextra-theme-docs";
+import { useConfig } from "nextra-theme-docs";
+import { useRouter } from "next/router";
 
-const config: DocsThemeConfig = {
-  logo: (
-    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+const DOCS_URL = "https://aetheris-docs.vercel.app";
+const GITHUB = "https://github.com/aetheris-project";
+
+function Logo() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
       <svg
         width="28"
         height="28"
         viewBox="0 0 64 64"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
       >
         <defs>
           <linearGradient id="docLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -32,59 +38,97 @@ const config: DocsThemeConfig = {
           d="M32 16 L48 48 L43 48 L40 42 L24 42 L21 48 L16 48 Z M27 38 L37 38 L32 24 Z"
           fill="url(#docLogoGrad)"
         />
-        <circle cx="32" cy="8" r="3" fill="#10B981" />
-        <circle cx="10" cy="22" r="2.5" fill="#10B981" opacity="0.7" />
-        <circle cx="54" cy="22" r="2.5" fill="#10B981" opacity="0.7" />
-        <circle cx="10" cy="42" r="2.5" fill="#10B981" opacity="0.7" />
-        <circle cx="54" cy="42" r="2.5" fill="#10B981" opacity="0.7" />
-        <circle cx="32" cy="56" r="3" fill="#10B981" />
       </svg>
-      <span style={{ fontWeight: 600 }}>Aetheris Docs</span>
+      <span style={{ fontWeight: 700, letterSpacing: "-0.01em" }}>Aetheris Docs</span>
     </div>
-  ),
+  );
+}
+
+const config: DocsThemeConfig = {
+  logo: <Logo />,
+  useNextSeoProps() {
+    const { asPath } = useRouter();
+    const title = asPath === "/" ? "Aetheris Docs" : undefined;
+    return { titleTemplate: "%s - Aetheris Docs", defaultTitle: title };
+  },
+  head() {
+    const { route } = useRouter();
+    const config = useConfig();
+    const title = `${config.title}${config.title ? " - " : ""}Aetheris Docs`;
+    const description =
+      "Documentation for the Aetheris billing and virtualization control plane: installation, architecture, hypervisor bridges (Pterodactyl, Proxmox VE, VirtFusion), the automated installers, the Python backend API and the REST API reference.";
+
+    return (
+      <>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{config.title ? `${config.title} - Aetheris Docs` : "Aetheris Docs"}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={`${DOCS_URL}${route === "/" ? "" : route}`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Aetheris Docs" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={`${DOCS_URL}${route === "/" ? "" : route}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+        <meta name="theme-color" content="#09090B" />
+        <meta name="color-scheme" content="dark" />
+      </>
+    );
+  },
+  primaryHue: { dark: 160, light: 160 },
+  primarySaturation: { dark: 84, light: 84 },
   project: {
-    link: "https://github.com/aetheris-project"
+    link: `${GITHUB}/aetheris-app`,
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+      </svg>
+    )
   },
-  docsRepositoryBase: "https://github.com/aetheris-project/aetheris-docs",
-  footer: {
-    text: "Aetheris documentation. Billing and virtualization control plane for the enterprise."
+  docsRepositoryBase: `${GITHUB}/aetheris-docs`,
+  editLink: {
+    text: "Edit this page on GitHub"
   },
-  head: (
-    <>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Aetheris Documentation</title>
-      <meta
-        name="description"
-        content="Installation guides for Linux, Windows and macOS, Pterodactyl and Proxmox bridge configuration, the automated installer, Python backend API, custom adapter SDK and REST API reference."
-      />
-      <link rel="canonical" href="https://aetheris-docs.vercel.app" />
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="Aetheris Documentation" />
-      <meta property="og:title" content="Aetheris Documentation" />
-      <meta
-        property="og:description"
-        content="Installation guides for Linux, Windows and macOS, Pterodactyl and Proxmox bridge configuration, the automated installer, Python backend API, custom adapter SDK and REST API reference."
-      />
-      <meta property="og:url" content="https://aetheris-docs.vercel.app" />
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="Aetheris Documentation" />
-      <meta
-        name="twitter:description"
-        content="Installation guides, bridge configuration, installer and API reference for the Aetheris control plane."
-      />
-      <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-      <meta name="theme-color" content="#09090B" />
-    </>
-  ),
-  i18n: [
-    { locale: "en", text: "English" },
-    { locale: "it", text: "Italiano" }
-  ],
   sidebar: {
-    defaultMenuCollapseLevel: 1
+    defaultMenuCollapseLevel: 1,
+    toggleButton: true
   },
   search: {
-    placeholder: "Search the wiki..."
+    placeholder: "Search the docs..."
+  },
+  toc: {
+    title: "On this page"
+  },
+  footer: {
+    text: (
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem", width: "100%" }}>
+        <span>Aetheris documentation - billing and virtualization control plane for the enterprise.</span>
+        <span style={{ fontSize: "0.8em", opacity: 0.7 }}>
+          <a href={`${GITHUB}/aetheris-app`} style={{ color: "inherit" }}>
+            aetheris-app
+          </a>{" "}
+          -{" "}
+          <a href={`${GITHUB}/aetheris-website`} style={{ color: "inherit" }}>
+            aetheris-website
+          </a>{" "}
+          -{" "}
+          <a href={`${GITHUB}/aetheris-windows-installer`} style={{ color: "inherit" }}>
+            aetheris-windows-installer
+          </a>{" "}
+          -{" "}
+          <a href={`${GITHUB}/aetheris-game-eggs`} style={{ color: "inherit" }}>
+            aetheris-game-eggs
+          </a>
+        </span>
+        <span style={{ fontSize: "0.8em", opacity: 0.7 }}>
+          Copyright (C) 2026 Leonardo Galli (Leo-Galli), Aetheris Project - AGPL-3.0. For support:
+          hello@another-horizon.eu
+        </span>
+      </div>
+    )
   }
 };
 

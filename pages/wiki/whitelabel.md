@@ -42,7 +42,7 @@ A full configuration object looks like this:
     "name": "Aetheris",
     "tagline": "Billing and virtualization control plane",
     "logoUrl": "https://cdn.example.com/logo.svg",
-    "domain": "aetheris.enterprise"
+    "domain": "aetheris-web.vercel.app"
   },
   "theme": {
     "accent": "emerald",
@@ -132,7 +132,7 @@ In the Admin Panel, set `Organization.customDomain` (for example
 ### 2. Point DNS at the platform edge
 
 ```text
-CNAME panel.mybrand.com -> panel.aetheris.enterprise
+CNAME panel.mybrand.com -> panel.aetheris-web.vercel.app
 ```
 
 ### 3. Route by Host header (Nginx example)

@@ -503,4 +503,4 @@ redis-cli keys 'bull:*' | head
 - Dynamic whitelabeling via the Admin Panel: `whitelabel.md`.
 - Pterodactyl bridge: `pterodactyl-bridge.md`.
 - Custom hypervisor backend: `../sdk/custom-adapter.md`.
-- REST API reference: `../api/reference.md`.
+- REST API reference: `../rest-api/reference.md`.
