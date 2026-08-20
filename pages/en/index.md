@@ -11,6 +11,8 @@ hypervisor drivers, with total admin control and dynamic whitelabeling.
   Windows and macOS, automated and manual paths.
 - [Automated installer](wiki/installer.md) - archinstall-style TUI wizard and
   non-interactive `--yes` mode with native service generation.
+- [Windows Installer](wiki/windows-installer.md) - the native Windows
+  installer (winget): dependencies, Docker stack, uninstall and packaging.
 - [Upgrades](wiki/upgrades.md) - the supported upgrade path, verification
   checklist and rollback procedure.
 

@@ -58,6 +58,38 @@ endpoint della piattaforma; il contratto machine-readable è la specifica
 | GET | `/admin/audit` | Stream del log audit |
 | PUT | `/admin/settings` | Impostazioni a livello piattaforma |
 
+### Sistema
+
+| Metodo | Percorso | Descrizione |
+| --- | --- | --- |
+| GET | `/system/status` | Versione, ultima release GitHub e disponibilità aggiornamenti |
+| GET | `/system/cron` | Elenca i job schedulati (cron) |
+| POST | `/system/cron` | Crea un job schedulato |
+| PATCH | `/system/cron/{id}` | Aggiorna un job schedulato |
+| DELETE | `/system/cron/{id}` | Elimina un job schedulato |
+| POST | `/system/cron/{id}/run` | Esegue un job immediatamente |
+| GET | `/system/sftp` | Elenca gli utenti SFTP per l'accesso file |
+| POST | `/system/sftp` | Crea un utente SFTP |
+| PATCH | `/system/sftp/{id}` | Aggiorna un utente SFTP |
+| DELETE | `/system/sftp/{id}` | Elimina un utente SFTP |
+
+I body dei job cron usano la forma `{ "name", "schedule", "task", "enabled" }`
+dove `schedule` è un'espressione cron a cinque campi e `task` è uno tra
+`backup`, `invoice.dunning`, `snapshot.prune`, `sync.pterodactyl`,
+`sync.proxmox`, `sync.virtfusion`, `report.daily`. I body degli utenti SFTP
+usano `{ "server_id", "username", "home_path", "enabled" }`.
+
+```json
+// GET /system/status
+{
+  "version": "1.0.0",
+  "latest_release": { "tag": "v1.1.0", "url": "...", "published_at": "2026-08-15T10:00:00Z" },
+  "update_available": true,
+  "environment": "production",
+  "healthy": true
+}
+```
+
 ## Webhook
 
 | Provider | Percorso | Header firma |

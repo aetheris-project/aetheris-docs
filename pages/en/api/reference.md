@@ -58,6 +58,38 @@ platform endpoints; the machine-readable contract is the bundled
 | GET | `/admin/audit` | Audit log stream |
 | PUT | `/admin/settings` | Platform-level settings |
 
+### System
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/system/status` | Version, latest GitHub release and update availability |
+| GET | `/system/cron` | List scheduled jobs (cron) |
+| POST | `/system/cron` | Create a scheduled job |
+| PATCH | `/system/cron/{id}` | Update a scheduled job |
+| DELETE | `/system/cron/{id}` | Delete a scheduled job |
+| POST | `/system/cron/{id}/run` | Trigger a job immediately |
+| GET | `/system/sftp` | List SFTP file-access users |
+| POST | `/system/sftp` | Create an SFTP user |
+| PATCH | `/system/sftp/{id}` | Update an SFTP user |
+| DELETE | `/system/sftp/{id}` | Delete an SFTP user |
+
+Cron job bodies use the shape `{ "name", "schedule", "task", "enabled" }`
+where `schedule` is a five-field cron expression and `task` is one of
+`backup`, `invoice.dunning`, `snapshot.prune`, `sync.pterodactyl`,
+`sync.proxmox`, `sync.virtfusion`, `report.daily`. SFTP user bodies use
+`{ "server_id", "username", "home_path", "enabled" }`.
+
+```json
+// GET /system/status
+{
+  "version": "1.0.0",
+  "latest_release": { "tag": "v1.1.0", "url": "...", "published_at": "2026-08-15T10:00:00Z" },
+  "update_available": true,
+  "environment": "production",
+  "healthy": true
+}
+```
+
 ## Webhooks
 
 | Provider | Path | Signature header |

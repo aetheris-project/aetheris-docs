@@ -64,6 +64,16 @@ Interactive API documentation: <http://127.0.0.1:8000/docs>
 | POST | `/api/billing/invoices/{id}/pay` | user | Pay invoice |
 | GET | `/api/theme` | - | Current whitelabel theme |
 | PUT | `/api/theme` | admin | Update whitelabel theme |
+| GET | `/api/system/status` | - | Version, latest release, update availability |
+| GET | `/api/system/cron` | user | List scheduled jobs |
+| POST | `/api/system/cron` | admin | Create a cron job |
+| PATCH | `/api/system/cron/{id}` | admin | Update a cron job |
+| DELETE | `/api/system/cron/{id}` | admin | Delete a cron job |
+| POST | `/api/system/cron/{id}/run` | admin | Trigger a job manually |
+| GET | `/api/system/sftp` | user | List SFTP users |
+| POST | `/api/system/sftp` | admin | Create an SFTP user |
+| PATCH | `/api/system/sftp/{id}` | admin | Update an SFTP user |
+| DELETE | `/api/system/sftp/{id}` | admin | Delete an SFTP user |
 
 ## Authentication
 
@@ -107,6 +117,67 @@ pytest -q
 
 The suite runs against an isolated temporary database and covers auth,
 node management, provisioning, power actions, billing and theme updates.
+
+## System endpoints (status, cron, SFTP)
+
+### Platform status and update check
+
+```bash
+curl -sS http://127.0.0.1:8000/api/system/status
+```
+
+```json
+{
+  "version": "1.0.0",
+  "latest_release": {
+    "tag": "v1.1.0",
+    "url": "https://github.com/aetheris-project/aetheris-app/releases/tag/v1.1.0",
+    "published_at": "2026-08-15T10:00:00Z"
+  },
+  "update_available": true,
+  "environment": "development",
+  "healthy": true
+}
+```
+
+The endpoint resolves the latest GitHub release (cached, never raises on
+network failure) and compares it against the running version, so the admin
+Status page can show an upgrade banner without any extra infrastructure.
+
+### Scheduled jobs (cron)
+
+```bash
+# List jobs
+curl -sS http://127.0.0.1:8000/api/system/cron -H "Authorization: Bearer $TOKEN"
+
+# Create a nightly backup job
+curl -sS http://127.0.0.1:8000/api/system/cron -X POST \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"name":"Nightly backups","schedule":"0 3 * * *","task":"backup","enabled":true}'
+
+# Trigger a job immediately (manual run)
+curl -sS http://127.0.0.1:8000/api/system/cron/1/run -X POST \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+Supported `task` values: `backup`, `invoice.dunning`, `snapshot.prune`,
+`sync.pterodactyl`, `sync.proxmox`, `sync.virtfusion`, `report.daily`.
+The `schedule` field is a standard five-field cron expression.
+
+### SFTP users
+
+```bash
+# List users (joins the server name)
+curl -sS http://127.0.0.1:8000/api/system/sftp -H "Authorization: Bearer $TOKEN"
+
+# Create a file-access account on server 1
+curl -sS http://127.0.0.1:8000/api/system/sftp -X POST \
+  -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"server_id":1,"username":"webuser","home_path":"/home/container","enabled":true}'
+```
+
+Usernames must start with a lowercase letter and contain only lowercase
+letters, digits and underscores. The pair `(server_id, username)` is unique.
 
 ## Production notes
 

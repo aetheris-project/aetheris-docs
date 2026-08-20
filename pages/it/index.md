@@ -12,6 +12,8 @@ admin totale e whitelabeling dinamico.
   Windows e macOS, percorsi automatizzati e manuali.
 - [Installer automatizzato](wiki/installer.md) - wizard TUI stile archinstall
   e modalità non interattiva `--yes` con generazione nativa dei servizi.
+- [Installer Windows](wiki/windows-installer.md) - l'installer nativo per
+  Windows (winget): dipendenze, stack Docker, disinstallazione e packaging.
 - [Aggiornamenti](wiki/upgrades.md) - il percorso di upgrade supportato, la
   checklist di verifica e la procedura di rollback.
 

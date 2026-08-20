@@ -1,6 +1,7 @@
 {
   "installation": "Guida all'installazione",
   "installer": "Installer automatizzato",
+  "windows-installer": "Installer Windows",
   "architecture": "Architettura",
   "backend": "Backend Python",
   "theming": "Temi e whitelabeling",
