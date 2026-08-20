@@ -127,8 +127,96 @@ The installer never writes outside the target directory. Run
 
 Exit codes: `0` success; `1` preflight or step failure.
 
+## Environment variables
+
+Every `--flag` has an environment equivalent. Flags win over variables;
+variables win over preset files.
+
+| Variable | Default | Effect |
+| --- | --- | --- |
+| `AETHERIS_INSTALL_TARGET` | `./aetheris-deploy` | Deployment directory |
+| `AETHERIS_INSTALL_WEB_PORT` | `3000` | Web server port |
+| `AETHERIS_INSTALL_BACKEND_PORT` | `8000` | Backend API port |
+| `AETHERIS_INSTALL_ADMIN_EMAIL` | `admin@example.com` | Superadmin email |
+| `AETHERIS_INSTALL_ADMIN_PASSWORD` | random | Superadmin password |
+| `AETHERIS_INSTALL_WITH_WEBSITE` | `1` | Install the website |
+| `AETHERIS_INSTALL_WITH_APP` | `1` | Install the app |
+| `AETHERIS_INSTALL_WITH_BACKEND` | `1` | Install the backend |
+| `AETHERIS_INSTALL_WITH_DOCS` | `0` | Install the docs |
+| `AETHERIS_INSTALL_WITH_SERVICES` | `1` | Write service units |
+
+## Exit codes
+
+| Code | Meaning |
+| --- | --- |
+| `0` | Success |
+| `1` | Preflight check or step failure |
+| `2` | Invalid arguments or preset file |
+| `3` | Missing required dependency (git, node, python) |
+
+## Verifying the install
+
+After a successful run, check:
+
+```bash
+# Services are active (Linux)
+sudo systemctl status aetheris-web aetheris-backend aetheris-worker
+
+# The web app answers
+curl -fsSI http://127.0.0.1:3000 | head -1
+
+# The backend is healthy
+curl -fsS http://127.0.0.1:8000/health
+
+# The log shows no errors
+journalctl -u aetheris-worker -n 20 --no-pager
+```
+
+## Uninstalling
+
+The installer does not register itself as a system package. To remove a
+deployment:
+
+```bash
+# Linux: stop and disable the units, then delete the directory
+sudo systemctl stop aetheris-web aetheris-backend aetheris-worker
+sudo systemctl disable aetheris-web aetheris-backend aetheris-worker
+rm -rf ./aetheris-deploy
+
+# Windows: stop the scheduled tasks, then delete the directory
+schtasks /End /TN AetherisWeb
+schtasks /Delete /TN AetherisWeb /F
+rmdir /s /q aetheris-deploy
+```
+
+## TUI keys (curses screen)
+
+| Key | Action |
+| --- | --- |
+| Up / Down, `j` / `k` | Move the selection |
+| `Space` | Toggle a component (website / app / backend / docs / services) |
+| `Enter` | Confirm and advance |
+| `q` / Esc | Go back / quit |
+
+On terminals without curses support the installer falls back to plain
+numbered prompts automatically.
+
+## Troubleshooting the installer
+
+- **`git not found`**: install git and add it to PATH, then re-run.
+- **`port already in use`**: pass `--web-port` / `--backend-port` or the
+  `AETHERIS_INSTALL_*_PORT` variables.
+- **Systemd units fail to start**: run `journalctl -u aetheris-backend -n 50`
+  and check the `.env` files inside the deployment directory.
+- **Backend cannot reach SQLite**: the backend runs its own `aetheris.db`
+  in `aetheris-app/backend`; check write permissions on that directory.
+- **CI keeps failing on `--yes`**: use `--skip-checks` only after you have
+  verified the preflight manually once.
+
 ## Next steps
 
 - Full per-OS guidance: see `installation.md`.
 - Python backend reference: see `backend.md`.
 - Theming and whitelabeling: see `theming.md`.
+- Operations: see `monitoring.md`, `backup-and-restore.md` and
+  `upgrades.md`.

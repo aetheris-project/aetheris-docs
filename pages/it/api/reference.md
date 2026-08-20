@@ -85,6 +85,115 @@ restituiscono `200` subito; l'elaborazione avviene nella coda `aetheris.billing`
 | 500 | Errore backend |
 | 502 | Errore hypervisor upstream |
 
+## Autenticazione
+
+### Sessioni (client interattivi)
+
+1. `POST /auth/login` con `{ "email": string, "password": string }`.
+2. La risposta contiene un access token (durata 15 minuti) e un refresh
+   token (rotazione a ogni uso, revocabile).
+3. Invia l'access token come `Authorization: Bearer <token>` su ogni
+   richiesta. Quando scade, scambia il refresh token su
+   `POST /auth/refresh`.
+
+### API key (macchine e script)
+
+Crea una API key nel Pannello Admin o tramite `POST /admin/api-keys`:
+
+```http
+Authorization: Bearer <admin-jwt>
+
+POST /admin/api-keys
+Content-Type: application/json
+
+{ "label": "deploy-bot", "scopes": ["servers:write", "billing:read"] }
+```
+
+Le API key non scadono per default ma possono essere revocate in qualsiasi
+momento; l'audit log registra ogni uso. Conservale nel tuo secret manager.
+
+## Paginazione e filtri
+
+Gli endpoint di elenco sono paginati. Parametri di query:
+
+| Parametro | Default | Descrizione |
+| --- | --- | --- |
+| `page` | `1` | Numero di pagina (da 1) |
+| `per_page` | `50` | Dimensione pagina, max `100` |
+| `sort` | `created_at:desc` | `field:asc` o `field:desc` |
+| `filter` | - | Coppie `key=value`, separate da virgola |
+
+Esempio:
+
+```http
+GET /billing/invoices?page=2&per_page=25&sort=due_date:asc&filter=status=open
+```
+
+Le risposte includono un envelope di paginazione:
+
+```json
+{
+  "data": [],
+  "meta": { "page": 2, "per_page": 25, "total": 312, "total_pages": 13 }
+}
+```
+
+## Idempotenza
+
+Le operazioni di scrittura accettano l'header `Idempotency-Key`. Ripetere la
+stessa richiesta con la stessa chiave restituisce il risultato originale
+invece di eseguirla di nuovo - essenziale per provisioning e pagamenti da
+script con retry.
+
+```http
+POST /servers
+Idempotency-Key: deploy-2026-08-20-01
+Content-Type: application/json
+```
+
+## Rate limit
+
+| Scope | Limite | Finestra |
+| --- | --- | --- |
+| Login | 5 tentativi | 15 minuti per account |
+| Endpoint pubblici | 60 richieste | 1 minuto per IP |
+| API autenticata | 600 richieste | 1 minuto per chiave |
+| Endpoint di pagamento | 20 richieste | 1 minuto per account |
+
+Il superamento del limite restituisce `429` con l'header `Retry-After`.
+
+## Formato degli errori
+
+Tutti gli errori usano una forma consistente:
+
+```json
+{
+  "error": {
+    "code": "node_unreachable",
+    "message": "Il nodo fra-01 non ha risposto",
+    "details": { "node_id": "fra-01", "attempts": 3 }
+  }
+}
+```
+
+I codici `code` machine-readable sono stabili tra le versioni; `message` è
+rivolto agli umani e può cambiare.
+
+## Esempio: provisionare un server
+
+```bash
+TOKEN=$(curl -sS -X POST http://app.example.com/api/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"ops@example.com","password":"secret"}' \
+  | jq -r '.accessToken')
+
+curl -sS -X POST http://app.example.com/api/servers \
+  -H "Authorization: Bearer $TOKEN" \
+  -H 'Idempotency-Key: deploy-001' \
+  -H 'Content-Type: application/json' \
+  -d '{"plan":"vps-4","node":"fra-01","egg":"nodejs-20"}'
+```
+
 ## Client SDK
 
 Client generati possono essere prodotti da `openapi.yaml` con qualsiasi

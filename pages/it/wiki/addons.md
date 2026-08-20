@@ -101,6 +101,23 @@ piattaforma. Esegui `npm run typecheck` dalla radice della repository per il
 typecheck di ogni modulo e `python -m pytest` per la suite di validazione dei
 manifest.
 
+## Pubblicare un modulo
+
+1. Crea `addons/<id>/` con un `manifest.json` valido, l'entry point
+   (`src/index.ts` per default) e un `README.md`.
+2. Valida il manifest localmente:
+   ```bash
+   python tools/validate.py addons/<id>/manifest.json
+   ```
+3. Implementa l'interfaccia richiesta dalla tua `category` (vedi lo schema
+   manifest in `docs/manifest-schema.md` per i contratti esatti).
+4. Aggiungi i test sotto `tests/` ed esegui la suite: `python -m pytest`.
+5. Apri una pull request verso `aetheris-addons`. La CI esegue la validazione
+   del manifest e la suite di test; una PR con un manifest non valido non può
+   essere mergiata.
+6. Dopo il merge, il modulo appare nel catalogo dello store (`store.json`)
+   automaticamente e può essere installato dal Pannello Admin.
+
 ## Vedi anche
 
 - [Store delle integrazioni](store.md) - dove vengono pubblicati i moduli
@@ -108,3 +125,4 @@ manifest.
 - [Adapter hypervisor personalizzato](../sdk/custom-adapter.md) - estensione
   del livello hypervisor.
 - [Temi e whitelabel](theming.md) - estensione del livello temi.
+- [Schema manifest](https://github.com/aetheris-project/aetheris-addons/blob/main/docs/manifest-schema.md) - il riferimento completo dei campi.

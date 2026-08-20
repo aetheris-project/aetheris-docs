@@ -1,12 +1,20 @@
 {
   "installation": "Guida all'installazione",
-  "installer": "Installer automatico",
+  "installer": "Installer automatizzato",
+  "architecture": "Architettura",
   "backend": "Backend Python",
-  "theming": "Temi e whitelabel",
+  "theming": "Temi e whitelabeling",
+  "whitelabel": "Whitelabeling dinamico",
+  "pterodactyl-bridge": "Bridge Pterodactyl",
+  "proxmox-setup": "Setup Proxmox VE",
+  "virtfusion-setup": "Setup VirtFusion",
   "addons": "Moduli e integrazioni",
   "store": "Store delle integrazioni",
-  "pterodactyl-bridge": "Bridge Pterodactyl",
-  "proxmox-setup": "Configurazione Proxmox VE",
-  "virtfusion-setup": "Configurazione VirtFusion",
-  "whitelabel": "Whitelabel dinamico"
+  "security": "Sicurezza",
+  "backup-and-restore": "Backup e restore",
+  "monitoring": "Monitoraggio e operazioni",
+  "upgrades": "Aggiornamenti",
+  "troubleshooting": "Risoluzione dei problemi",
+  "development": "Sviluppo",
+  "glossary": "Glossario"
 }

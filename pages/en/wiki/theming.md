@@ -101,3 +101,67 @@ inline script in the root layout, so there is no flash of the wrong theme.
    `components/website/InteractiveDemo.tsx`.
 4. If the backend should serve it, extend `ThemeConfig` in
    `aetheris-app/backend/aetheris_backend/schemas.py`.
+
+## Design token reference
+
+All tokens are RGB triplets so Tailwind can compose them with opacity
+(`rgb(var(--token) / <alpha-value>)`). The full set:
+
+| Token | Dark value | Light value | Used for |
+| --- | --- | --- | --- |
+| `--aetheris-bg` | `9 9 11` | `250 250 250` | Page background (`bg-base`) |
+| `--aetheris-surface` | `20 20 24` | `255 255 255` | Cards and panels (`bg-surface`) |
+| `--aetheris-raised` | `26 26 31` | `244 244 245` | Raised elements (`bg-raised`) |
+| `--aetheris-border` | `39 39 42` | `228 228 231` | Borders (`border-edge`) |
+| `--aetheris-fg` | `250 250 250` | `24 24 27` | Primary text (`text-ink`) |
+| `--aetheris-muted` | `161 161 170` | `82 82 91` | Secondary text (`text-muted`) |
+| `--aetheris-faint` | `113 113 122` | `113 113 122` | Tertiary text (`text-faint`) |
+| `--aetheris-accent` | `16 185 129` | `16 185 129` | Accent (`text-accent`, `bg-accent`) |
+| `--aetheris-accent-strong` | `5 150 105` | `5 150 105` | Hover/pressed accent |
+| `--aetheris-accent-soft` | rgba(16,185,129,.12) | rgba(16,185,129,.10) | Accent tinted fills (`bg-accent-soft`) |
+| `--aetheris-success` | `16 185 129` | `16 185 129` | Success states |
+| `--aetheris-danger` | `239 68 68` | `239 68 68` | Error states |
+| `--aetheris-warning` | `245 158 11` | `245 158 11` | Warning states |
+
+Semantic Tailwind utilities mapped from the tokens:
+
+| Utility | Token | Example usage |
+| --- | --- | --- |
+| `bg-base` | `--aetheris-bg` | Page and modal backdrops |
+| `bg-surface` | `--aetheris-surface` | Cards, form containers |
+| `bg-raised` | `--aetheris-raised` | Hover fills, stat tiles |
+| `border-edge` | `--aetheris-border` | All borders and dividers |
+| `text-ink` | `--aetheris-fg` | Headings and primary text |
+| `text-muted` | `--aetheris-muted` | Body copy |
+| `text-faint` | `--aetheris-faint` | Labels and captions |
+| `text-accent` / `bg-accent` | `--aetheris-accent` | Links, active states, primary buttons |
+| `bg-accent-soft` | `--aetheris-accent-soft` | Selected rows, pill backgrounds |
+
+## Accessibility
+
+- All foreground/background token pairs pass WCAG AA contrast in both
+  themes (checked against the token values above).
+- The accent color is never the only signal: active states also change
+  background (`bg-accent-soft`) and borders.
+- `prefers-reduced-motion` disables the fade-up, pulse, shimmer and
+  scanline animations (see `globals.css`).
+- Focus is always visible: interactive elements use
+  `focus-visible:outline` with the accent color.
+- The theme system respects `prefers-color-scheme` when the user selects
+  `system`.
+
+## Applying the theme without flash
+
+The root layout inlines a small script that runs before first paint:
+
+```js
+var t = localStorage.getItem("aetheris-theme") || "dark";
+var r = t === "system"
+  ? (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark")
+  : t;
+document.documentElement.setAttribute("data-theme", r);
+```
+
+This guarantees the correct theme is applied on the very first frame,
+regardless of how fast the bundle loads. `suppressHydrationWarning` on the
+`<html>` element prevents a hydration mismatch warning for this attribute.

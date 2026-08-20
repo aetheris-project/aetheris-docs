@@ -97,9 +97,27 @@ Modules are plain TypeScript with no runtime dependency on the platform SDK.
 Run `npm run typecheck` from the repository root to typecheck every module,
 and `python -m pytest` to run the manifest validation suite.
 
+## Publishing a module
+
+1. Create `addons/<id>/` with a valid `manifest.json`, the entry point
+   (`src/index.ts` by default) and a `README.md`.
+2. Validate the manifest locally:
+   ```bash
+   python tools/validate.py addons/<id>/manifest.json
+   ```
+3. Implement the interface required by your `category` (see the manifest
+   schema in `docs/manifest-schema.md` for the exact contracts).
+4. Add tests under `tests/` and run the suite: `python -m pytest`.
+5. Open a pull request against `aetheris-addons`. CI runs the manifest
+   validation and the test suite; a PR with an invalid manifest cannot be
+   merged.
+6. Once merged, the module appears in the store catalog (`store.json`)
+   automatically and can be installed from the Admin Panel.
+
 ## See also
 
 - [Integration store](store.md) - where accepted modules are published.
 - [Custom hypervisor adapter](../sdk/custom-adapter.md) - extending the
   hypervisor layer.
 - [Theming and whitelabeling](theming.md) - extending the theme layer.
+- [Manifest schema](https://github.com/aetheris-project/aetheris-addons/blob/main/docs/manifest-schema.md) - the full field reference.

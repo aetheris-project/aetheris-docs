@@ -126,8 +126,97 @@ per stampare ogni azione senza toccare il disco.
 
 Codici di uscita: `0` successo; `1` fallimento preflight o di un passo.
 
+## Variabili d'ambiente
+
+Ogni `--flag` ha un equivalente in variabile d'ambiente. I flag vincono
+sulle variabili; le variabili vincono sui file preset.
+
+| Variabile | Default | Effetto |
+| --- | --- | --- |
+| `AETHERIS_INSTALL_TARGET` | `./aetheris-deploy` | Directory di deploy |
+| `AETHERIS_INSTALL_WEB_PORT` | `3000` | Porta del web server |
+| `AETHERIS_INSTALL_BACKEND_PORT` | `8000` | Porta dell'API backend |
+| `AETHERIS_INSTALL_ADMIN_EMAIL` | `admin@example.com` | Email superadmin |
+| `AETHERIS_INSTALL_ADMIN_PASSWORD` | casuale | Password superadmin |
+| `AETHERIS_INSTALL_WITH_WEBSITE` | `1` | Installa il sito |
+| `AETHERIS_INSTALL_WITH_APP` | `1` | Installa l'app |
+| `AETHERIS_INSTALL_WITH_BACKEND` | `1` | Installa il backend |
+| `AETHERIS_INSTALL_WITH_DOCS` | `0` | Installa la docs |
+| `AETHERIS_INSTALL_WITH_SERVICES` | `1` | Scrive le unità di servizio |
+
+## Codici di uscita
+
+| Codice | Significato |
+| --- | --- |
+| `0` | Successo |
+| `1` | Preflight o step fallito |
+| `2` | Argomenti o file preset non validi |
+| `3` | Dipendenza richiesta mancante (git, node, python) |
+
+## Verificare l'installazione
+
+Dopo un run riuscito, controlla:
+
+```bash
+# I servizi sono attivi (Linux)
+sudo systemctl status aetheris-web aetheris-backend aetheris-worker
+
+# La web app risponde
+curl -fsSI http://127.0.0.1:3000 | head -1
+
+# Il backend è sano
+curl -fsS http://127.0.0.1:8000/health
+
+# Il log non mostra errori
+journalctl -u aetheris-worker -n 20 --no-pager
+```
+
+## Disinstallare
+
+L'installer non si registra come pacchetto di sistema. Per rimuovere un
+deploy:
+
+```bash
+# Linux: ferma e disabilita le unità, poi elimina la directory
+sudo systemctl stop aetheris-web aetheris-backend aetheris-worker
+sudo systemctl disable aetheris-web aetheris-backend aetheris-worker
+rm -rf ./aetheris-deploy
+
+# Windows: ferma le attività pianificate, poi elimina la directory
+schtasks /End /TN AetherisWeb
+schtasks /Delete /TN AetherisWeb /F
+rmdir /s /q aetheris-deploy
+```
+
+## Tasti del TUI (schermata curses)
+
+| Tasto | Azione |
+| --- | --- |
+| Su / Giù, `j` / `k` | Sposta la selezione |
+| `Spazio` | Attiva/disattiva un componente (sito / app / backend / docs / servizi) |
+| `Invio` | Conferma e avanza |
+| `q` / Esc | Indietro / esci |
+
+Sui terminali senza supporto curses l'installer ricade automaticamente su
+prompt numerati in plain text.
+
+## Risolvere problemi dell'installer
+
+- **`git not found`**: installa git e aggiungilo al PATH, poi riprova.
+- **`port already in use`**: passa `--web-port` / `--backend-port` o le
+  variabili `AETHERIS_INSTALL_*_PORT`.
+- **Le unità systemd non partono**: esegui `journalctl -u aetheris-backend -n 50`
+  e controlla i file `.env` dentro la directory di deploy.
+- **Il backend non raggiunge SQLite**: il backend usa il proprio
+  `aetheris.db` in `aetheris-app/backend`; controlla i permessi di scrittura
+  su quella directory.
+- **La CI fallisce su `--yes`**: usa `--skip-checks` solo dopo aver
+  verificato manualmente il preflight almeno una volta.
+
 ## Prossimi passi
 
 - Guida per-OS completa: vedi `installation.md`.
 - Riferimento backend Python: vedi `backend.md`.
 - Temi e whitelabel: vedi `theming.md`.
+- Operazioni: vedi `monitoring.md`, `backup-and-restore.md` e
+  `upgrades.md`.

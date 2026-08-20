@@ -1,12 +1,20 @@
 {
   "installation": "Installation guide",
   "installer": "Automated installer",
+  "architecture": "Architecture",
   "backend": "Python backend",
   "theming": "Theming and whitelabeling",
-  "addons": "Modules and integrations",
-  "store": "Integration store",
+  "whitelabel": "Dynamic whitelabeling",
   "pterodactyl-bridge": "Pterodactyl bridge",
   "proxmox-setup": "Proxmox VE setup",
   "virtfusion-setup": "VirtFusion setup",
-  "whitelabel": "Dynamic whitelabeling"
+  "addons": "Modules and integrations",
+  "store": "Integration store",
+  "security": "Security",
+  "backup-and-restore": "Backup and restore",
+  "monitoring": "Monitoring and operations",
+  "upgrades": "Upgrades",
+  "troubleshooting": "Troubleshooting",
+  "development": "Development",
+  "glossary": "Glossary"
 }
