@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Aetheris wiki, installation guides, developer SDK and OpenAPI specifications.",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "AGPL-3.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
