@@ -22,6 +22,10 @@ hypervisor drivers, with total admin control and dynamic whitelabeling.
   topologies and failure domains.
 - [Python backend](wiki/backend.md) - the REST API, its data model and how to
   run it standalone.
+- [Billing engine](wiki/billing.md) - invoicing, VAT, coupons, provider
+  webhooks, dunning and refunds.
+- [Game hosting](wiki/game-hosting.md) - the game catalog, the Pterodactyl
+  eggs and how servers are ordered and provisioned.
 - [Theming and whitelabeling](wiki/theming.md) - dark / light / system themes
   and runtime accents.
 - [Dynamic whitelabeling](wiki/whitelabel.md) - runtime branding without

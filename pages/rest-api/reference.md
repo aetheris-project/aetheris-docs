@@ -42,11 +42,33 @@ platform endpoints; the machine-readable contract is the bundled
 
 | Method | Path | Description |
 | --- | --- | --- |
-| GET | `/billing/invoices` | List invoices for the tenant |
-| GET | `/billing/invoices/{id}` | Invoice with lines and payments |
-| POST | `/billing/invoices/{id}/pay` | Trigger a payment attempt |
-| GET | `/billing/payment-methods` | Saved payment methods |
-| POST | `/billing/subscriptions` | Subscribe to a plan |
+| GET | `/billing/summary` | MRR, outstanding, overdue and collected amounts |
+| GET | `/billing/invoices` | List invoices with lines and payments |
+| GET | `/billing/invoices/{id}` | Single invoice detail |
+| POST | `/billing/invoices` | Create an invoice with lines, VAT and an optional coupon |
+| POST | `/billing/invoices/{id}/pay` | Settle an invoice (direct/demo payment) |
+| POST | `/billing/invoices/{id}/refund` | Refund a paid invoice (admin) |
+| GET | `/billing/coupons` | List coupons |
+| POST | `/billing/coupons` | Create a coupon (admin) |
+| DELETE | `/billing/coupons/{id}` | Disable a coupon (admin) |
+| POST | `/billing/webhooks/{provider}` | Idempotent payment webhook ingress (stripe, paypal, mollie) |
+| POST | `/billing/dunning/run` | Run the dunning state machine (admin) |
+| GET | `/billing/dunning/status` | Invoice status counts and grace period |
+
+Invoice creation bodies use
+`{ "client", "currency", "due_days", "coupon_code", "lines": [{ "description", "quantity", "unit_cents", "tax_rate_pct" }] }`.
+Webhook bodies use `{ "event", "payment_id", "invoice_number" | "invoice_id", "amount_cents", "currency" }`
+with `event` one of `payment.succeeded`, `payment.failed`, `payment.refunded`.
+
+### Catalog (game hosting)
+
+| Method | Path | Description |
+| --- | --- | --- |
+| GET | `/catalog/games` | Game catalog with resource presets and pricing |
+| GET | `/catalog/games/{slug}` | Single game entry (metadata, image, presets) |
+
+See [Game hosting](../wiki/game-hosting.md) for the full catalog and the
+provisioning flow.
 
 ### Admin
 

@@ -4,6 +4,8 @@
   "windows-installer": "Windows Installer",
   "architecture": "Architecture",
   "backend": "Python backend",
+  "billing": "Billing engine",
+  "game-hosting": "Game hosting",
   "theming": "Theming and whitelabeling",
   "whitelabel": "Dynamic whitelabeling",
   "pterodactyl-bridge": "Pterodactyl bridge",
