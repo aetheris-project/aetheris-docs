@@ -114,25 +114,39 @@ const config: DocsThemeConfig = {
     toggleButton: true
   },
   banner: {
-    key: "contribution-banner",
+    key: "aetheris-contrib-2026",
     text: (
-      <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        Want to contribute? All improvements go through Pull Requests with automated checks before review by
+      <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", width: "100%", flexWrap: "wrap" }}>
+        <span style={{ opacity: 0.7 }}>Open Source</span>
+        <span style={{ opacity: 0.3 }}>|</span>
+        <span>
+          All improvements go through Pull Requests with automated CI checks before review by
+          <a
+            href="https://github.com/Leo-Galli"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#10b981", fontWeight: 600, marginLeft: "0.25rem" }}
+          >
+            @Leo-Galli
+          </a>
+        </span>
+        <span style={{ opacity: 0.3 }}>|</span>
         <a
-          href="https://github.com/Leo-Galli"
+          href="https://discord.gg/6GcfebuT2A"
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "#10b981", fontWeight: 600 }}
         >
-          @Leo-Galli
+          Join Discord
         </a>
+        <span style={{ opacity: 0.3 }}>|</span>
         <a
-          href={`${GITHUB}/aetheris-app/blob/main/CONTRIBUTING.md`}
+          href={`${GITHUB}/aetheris-docs/blob/main/CONTRIBUTING.md`}
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: "#10b981", textDecoration: "underline" }}
         >
-          Read the guide
+          Contributing guide
         </a>
       </span>
     )
