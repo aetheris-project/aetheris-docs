@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const LANGUAGES = [
   { code: "en", label: "English", flag: "EN" },
@@ -17,27 +17,18 @@ const LANGUAGES = [
   { code: "ko", label: "Korean", flag: "KO" }
 ];
 
-declare global {
-  interface Window {
-    google?: {
-      translate?: {
-        TranslateElement?: new (options: object, id: string) => void;
-      };
-    };
-    googleTranslateElementInit?: () => void;
-  }
-}
-
 export function LanguageTranslator() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
-  const [loaded, setLoaded] = useState(false);
+  const [translating, setTranslating] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const widgetKey = useRef(0);
 
   useEffect(() => {
-    // Check if Google Translate is already loaded
-    if (typeof window !== "undefined" && window.google?.translate) {
-      setLoaded(true);
+    // Read cookie on mount
+    const match = document.cookie.match(/googtrans=\/en\/([a-z]{2})/);
+    if (match) {
+      setCurrentLang(match[1]);
     }
   }, []);
 
@@ -51,52 +42,31 @@ export function LanguageTranslator() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  function initGoogleTranslate(lang: string) {
+  const applyTranslation = useCallback((lang: string) => {
     if (lang === "en") {
-      // Reset to original English
-      const cookie = document.cookie.split(";").find((c) => c.trim().startsWith("googtrans="));
-      if (cookie) {
-        document.cookie = "googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      }
+      // Clear cookie and reload
+      document.cookie = "googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      // Also clear for google.com domain
+      document.cookie = "googtrans=; path=/; domain=.vercel.app; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      setCurrentLang("en");
+      setTranslating(false);
       window.location.reload();
       return;
     }
 
-    // Set the Google Translate cookie
+    setCurrentLang(lang);
+    setTranslating(true);
     document.cookie = `googtrans=/en/${lang}; path=/`;
 
-    // Load Google Translate script if not already loaded
-    if (!document.getElementById("google-translate-script")) {
-      const script = document.createElement("script");
-      script.id = "google-translate-script";
-      script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      script.async = true;
-      document.body.appendChild(script);
-
-      window.googleTranslateElementInit = () => {
-        if (window.google?.translate?.TranslateElement) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const TranslateElement = window.google.translate.TranslateElement as any;
-          new TranslateElement(
-            {
-              pageLanguage: "en",
-              includedLanguages: LANGUAGES.map((l) => l.code).join(","),
-              layout: TranslateElement.InlineLayout?.SIMPLE ?? 0,
-              autoDisplay: false
-            },
-            "google-translate-element"
-          );
-          setLoaded(true);
-        }
-      };
-    } else {
-      // Script already loaded, just reload with new cookie
-      window.location.reload();
+    // Load Google Translate script
+    const existingScript = document.getElementById("google-translate-script");
+    if (existingScript) {
+      existingScript.remove();
     }
 
-    setCurrentLang(lang);
-    setIsOpen(false);
-  }
+    // Force reinitialize by reloading
+    window.location.reload();
+  }, []);
 
   const currentLanguage = LANGUAGES.find((l) => l.code === currentLang) ?? LANGUAGES[0];
 
@@ -127,15 +97,21 @@ export function LanguageTranslator() {
               <button
                 key={lang.code}
                 type="button"
-                onClick={() => initGoogleTranslate(lang.code)}
+                onClick={() => applyTranslation(lang.code)}
+                disabled={translating}
                 className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs transition-colors ${
                   currentLang === lang.code
                     ? "bg-[#10b981]/10 text-[#10b981]"
                     : "text-[#a1a1aa] hover:bg-[#1a1a1f] hover:text-[#fafafa]"
-                }`}
+                } ${translating ? "opacity-50 cursor-not-allowed" : ""}`}
               >
                 <span className="w-5 text-center font-mono text-[10px] font-bold">{lang.flag}</span>
                 <span>{lang.label}</span>
+                {currentLang === lang.code && lang.code !== "en" && (
+                  <svg className="ml-auto h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
               </button>
             ))}
           </div>
@@ -145,8 +121,8 @@ export function LanguageTranslator() {
         </div>
       )}
 
-      {/* Hidden div for Google Translate widget */}
-      <div id="google-translate-element" className="hidden" />
+      {/* Google Translate container - rendered in footer area */}
+      <div id="google_translate_element" style={{ position: "fixed", bottom: 0, right: 0, zIndex: -1, opacity: 0, pointerEvents: "none" }} />
     </div>
   );
 }

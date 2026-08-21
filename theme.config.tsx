@@ -145,23 +145,16 @@ const config: DocsThemeConfig = {
   },
   footer: {
     text: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", width: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", width: "100%" }}>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem", fontSize: "0.8em" }}>
-          <a href="https://discord.gg/6GcfebuT2A" target="_blank" rel="noopener noreferrer" style={{ color: "#10b981" }}>Discord community</a>
-          <a href={`${GITHUB}/aetheris-app`} style={{ color: "inherit" }}>aetheris-app</a>
-          <a href={`${GITHUB}/aetheris-website`} style={{ color: "inherit" }}>aetheris-website</a>
-          <a href={`${GITHUB}/aetheris-windows-installer`} style={{ color: "inherit" }}>aetheris-windows-installer</a>
-          <a href={`${GITHUB}/aetheris-game-eggs`} style={{ color: "inherit" }}>aetheris-game-eggs</a>
-          <a href={`${GITHUB}/aetheris-addons`} style={{ color: "inherit" }}>aetheris-addons</a>
-          <a href={`${GITHUB}/aetheris-docs`} style={{ color: "inherit" }}>aetheris-docs</a>
-        </div>
-        <div style={{ fontSize: "0.75em", opacity: 0.6, textAlign: "center" }}>
-          <p>Copyright (C) 2026 Leonardo Galli (Leo-Galli), Aetheris Project - AGPL-3.0</p>
-          <p style={{ marginTop: "0.25rem" }}>
-            All contributions require a Pull Request with automated CI checks (lint, typecheck, build) before manual review.
-            Contact:{" "}
-            <a href="mailto:hello@another-horizon.eu" style={{ color: "inherit" }}>hello@another-horizon.eu</a>
-          </p>
+          <a href="https://discord.gg/6GcfebuT2A" target="_blank" rel="noopener noreferrer" style={{ color: "#10b981" }}>Discord</a>
+          <a href={`${GITHUB}/aetheris-app`} target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>aetheris-app</a>
+          <a href={`${GITHUB}/aetheris-website`} target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>aetheris-website</a>
+          <a href={`${GITHUB}/aetheris-windows-installer`} target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>aetheris-windows-installer</a>
+          <a href={`${GITHUB}/aetheris-game-eggs`} target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>aetheris-game-eggs</a>
+          <a href={`${GITHUB}/aetheris-addons`} target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>aetheris-addons</a>
+          <a href={`${GITHUB}/aetheris-docs`} target="_blank" rel="noopener noreferrer" style={{ color: "inherit" }}>aetheris-docs</a>
+          <a href="mailto:hello@another-horizon.eu" style={{ color: "inherit" }}>Contact</a>
         </div>
       </div>
     )
