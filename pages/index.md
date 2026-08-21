@@ -5,6 +5,8 @@ converges WHMCS, FOSSBilling, Pterodactyl Panel, Proxmox VE and VirtFusion into
 a single control panel: one billing engine, one client portal and one set of
 hypervisor drivers, with total admin control and dynamic whitelabeling.
 
+> **Need this in another language?** Use the language selector in the top navigation bar to auto-translate the documentation. Available in English, Italian, Spanish, French, German, Portuguese and more.
+
 ## Getting started
 
 - [Installation guide](installation.md) - per-OS deployment on Linux,
@@ -101,6 +103,15 @@ hypervisor drivers, with total admin control and dynamic whitelabeling.
   documentation.
 - [OpenAPI specification](https://github.com/aetheris-project/aetheris-docs/blob/main/public/openapi.yaml) - machine-readable API contract.
 - [Glossary](glossary.md) - the terms used across the platform.
+
+## Contributing
+
+Aetheris is an open-source project and we welcome contributions. All improvements
+go through Pull Requests with automated CI checks (lint, typecheck, build, tests)
+before manual review by @Leo-Galli.
+
+- [Contributing guide](contributing.md) - how to submit PRs and what to expect
+- [CONTRIBUTING.md](https://github.com/aetheris-project/aetheris-app/blob/main/CONTRIBUTING.md) - detailed guidelines
 
 ## Support
 

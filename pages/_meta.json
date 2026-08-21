@@ -102,5 +102,10 @@
   "windows-installer-setup": "Windows Installer setup",
   "windows-installer-cli": "Windows Installer CLI",
   "windows-installer-dev": "Windows Installer dev",
-  "glossary": "Glossary"
+  "glossary": "Glossary",
+  "--- Community": {
+    "type": "separator",
+    "title": "Community"
+  },
+  "contributing": "Contributing"
 }

@@ -1,9 +1,11 @@
 import type { DocsThemeConfig } from "nextra-theme-docs";
 import { useConfig } from "nextra-theme-docs";
 import { useRouter } from "next/router";
+import { LanguageTranslator } from "./components/LanguageTranslator";
 
 const DOCS_URL = "https://aetheris-docs.vercel.app";
 const GITHUB = "https://github.com/aetheris-project";
+const DOCS_REPO = `${GITHUB}/aetheris-docs`;
 
 function Logo() {
   return (
@@ -70,14 +72,19 @@ const config: DocsThemeConfig = {
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:url" content={`${DOCS_URL}${route === "/" ? "" : route}`} />
+        <meta property="og:image" content={`${DOCS_URL}/logo.svg`} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={`${DOCS_URL}/logo.svg`} />
         <link rel="icon" type="image/svg+xml" href="/icon.svg" />
         <meta name="theme-color" content="#09090B" />
         <meta name="color-scheme" content="dark" />
       </>
     );
+  },
+  navbar: {
+    extraContent: () => <LanguageTranslator />
   },
   darkMode: true,
   nextThemes: {
@@ -93,13 +100,42 @@ const config: DocsThemeConfig = {
       </svg>
     )
   },
-  docsRepositoryBase: `${GITHUB}/aetheris-docs`,
+  docsRepositoryBase: DOCS_REPO,
   editLink: {
-    text: "Edit this page on GitHub"
+    text: "Edit this page on GitHub",
+    component: ({ filePath, ...props }) => {
+      // Map the file path to the correct GitHub URL
+      const url = `${DOCS_REPO}/edit/main/pages/${filePath}`;
+      return <a href={url} target="_blank" rel="noopener noreferrer" {...props} />;
+    }
   },
   sidebar: {
     defaultMenuCollapseLevel: 1,
     toggleButton: true
+  },
+  banner: {
+    key: "contribution-banner",
+    text: (
+      <span style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        Want to contribute? All improvements go through Pull Requests with automated checks before review by
+        <a
+          href="https://github.com/Leo-Galli"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#10b981", fontWeight: 600 }}
+        >
+          @Leo-Galli
+        </a>
+        <a
+          href={`${GITHUB}/aetheris-app/blob/main/CONTRIBUTING.md`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "#10b981", textDecoration: "underline" }}
+        >
+          Read the guide
+        </a>
+      </span>
+    )
   },
   search: {
     placeholder: "Search the docs..."
@@ -109,29 +145,23 @@ const config: DocsThemeConfig = {
   },
   footer: {
     text: (
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem", width: "100%" }}>
-        <span>Aetheris documentation - billing and virtualization control panel for the enterprise.</span>
-        <span style={{ fontSize: "0.8em", opacity: 0.7 }}>
-          <a href={`${GITHUB}/aetheris-app`} style={{ color: "inherit" }}>
-            aetheris-app
-          </a>{" "}
-          -{" "}
-          <a href={`${GITHUB}/aetheris-website`} style={{ color: "inherit" }}>
-            aetheris-website
-          </a>{" "}
-          -{" "}
-          <a href={`${GITHUB}/aetheris-windows-installer`} style={{ color: "inherit" }}>
-            aetheris-windows-installer
-          </a>{" "}
-          -{" "}
-          <a href={`${GITHUB}/aetheris-game-eggs`} style={{ color: "inherit" }}>
-            aetheris-game-eggs
-          </a>
-        </span>
-        <span style={{ fontSize: "0.8em", opacity: 0.7 }}>
-          Copyright (C) 2026 Leonardo Galli (Leo-Galli), Aetheris Project - AGPL-3.0. For support:
-          hello@another-horizon.eu
-        </span>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", width: "100%" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem", fontSize: "0.8em" }}>
+          <a href={`${GITHUB}/aetheris-app`} style={{ color: "inherit" }}>aetheris-app</a>
+          <a href={`${GITHUB}/aetheris-website`} style={{ color: "inherit" }}>aetheris-website</a>
+          <a href={`${GITHUB}/aetheris-windows-installer`} style={{ color: "inherit" }}>aetheris-windows-installer</a>
+          <a href={`${GITHUB}/aetheris-game-eggs`} style={{ color: "inherit" }}>aetheris-game-eggs</a>
+          <a href={`${GITHUB}/aetheris-addons`} style={{ color: "inherit" }}>aetheris-addons</a>
+          <a href={`${GITHUB}/aetheris-docs`} style={{ color: "inherit" }}>aetheris-docs</a>
+        </div>
+        <div style={{ fontSize: "0.75em", opacity: 0.6, textAlign: "center" }}>
+          <p>Copyright (C) 2026 Leonardo Galli (Leo-Galli), Aetheris Project - AGPL-3.0</p>
+          <p style={{ marginTop: "0.25rem" }}>
+            All contributions require a Pull Request with automated CI checks (lint, typecheck, build) before manual review.
+            Contact:{" "}
+            <a href="mailto:hello@another-horizon.eu" style={{ color: "inherit" }}>hello@another-horizon.eu</a>
+          </p>
+        </div>
       </div>
     )
   }
