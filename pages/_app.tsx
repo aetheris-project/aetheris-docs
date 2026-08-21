@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { AppProps } from "next/app";
 import "nextra-theme-docs/style.css";
 import "../styles/docs.css";
@@ -14,37 +14,54 @@ declare global {
   }
 }
 
+const INCLUDED_LANGS = "en,it,es,fr,de,pt,nl,pl,ru,ja,zh-CN,ko";
+
 function GoogleTranslateInit() {
+  const inited = useRef(false);
+
   useEffect(() => {
-    const cookie = document.cookie.match(/googtrans=\/en\/([a-z]{2})/);
+    const cookie = document.cookie.match(/googtrans=\/en\/([a-zA-Z-]+)/i);
     if (!cookie) return;
 
-    // Initialize Google Translate widget
-    window.googleTranslateElementInit = () => {
-      if (window.google?.translate?.TranslateElement) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const TE = window.google.translate.TranslateElement as any;
-        new TE(
-          {
-            pageLanguage: "en",
-            includedLanguages: "en,it,es,fr,de,pt,nl,pl,ru,ja,zh,ko",
-            layout: TE.InlineLayout?.SIMPLE ?? 0,
-            autoDisplay: false
-          },
-          "google_translate_element"
-        );
+    const initFn = () => {
+      if (inited.current) return;
+      inited.current = true;
+      if (typeof window !== "undefined" && (window as any).google?.translate?.TranslateElement) {
+        try {
+          const TE = (window as any).google.translate.TranslateElement;
+          new TE(
+            {
+              pageLanguage: "en",
+              includedLanguages: INCLUDED_LANGS,
+              layout: TE.InlineLayout?.SIMPLE ?? 0,
+              autoDisplay: false,
+              multilanguagePage: true
+            },
+            "google_translate_element"
+          );
+        } catch (e) {
+          // ignore re-init errors
+        }
       }
     };
 
-    // Load script if not already present
+    (window as any).googleTranslateElementInit = initFn;
+
     if (!document.getElementById("google-translate-script")) {
       const script = document.createElement("script");
       script.id = "google-translate-script";
       script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
       script.async = true;
+      script.onerror = () => {
+        inited.current = false;
+      };
       document.body.appendChild(script);
-    } else if (window.google?.translate) {
-      window.googleTranslateElementInit?.();
+    } else {
+      if ((window as any).google?.translate?.TranslateElement) {
+        initFn();
+      } else {
+        (window as any).googleTranslateElementInit?.();
+      }
     }
   }, []);
 
