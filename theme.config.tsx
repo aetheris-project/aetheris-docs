@@ -147,6 +147,7 @@ const config: DocsThemeConfig = {
     text: (
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", width: "100%" }}>
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.5rem", fontSize: "0.8em" }}>
+          <a href="https://discord.gg/6GcfebuT2A" target="_blank" rel="noopener noreferrer" style={{ color: "#10b981" }}>Discord community</a>
           <a href={`${GITHUB}/aetheris-app`} style={{ color: "inherit" }}>aetheris-app</a>
           <a href={`${GITHUB}/aetheris-website`} style={{ color: "inherit" }}>aetheris-website</a>
           <a href={`${GITHUB}/aetheris-windows-installer`} style={{ color: "inherit" }}>aetheris-windows-installer</a>
