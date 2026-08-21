@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /_next/static/
+Disallow: /_next/
+Disallow: /api/
 
 Sitemap: https://aetheris-docs.vercel.app/sitemap.xml

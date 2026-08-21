@@ -2,68 +2,140 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://aetheris-docs.vercel.app/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/installation</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/installation</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/installer</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/installation-automated</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/backend</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/installation-docker</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/theming</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/installation-linux</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/installation-windows</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/system-requirements</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/whitelabel</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/environment-variables</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/pterodactyl-bridge</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/architecture</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/billing</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/game-hosting</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/proxmox-setup</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/pterodactyl-bridge</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/wiki/virtfusion-setup</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/proxmox-setup</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/sdk/custom-adapter</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/virtfusion-setup</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/windows-installer</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/theming</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://aetheris-docs.vercel.app/api/reference</loc>
-    <lastmod>2026-08-19</lastmod>
+    <loc>https://aetheris-docs.vercel.app/whitelabel</loc>
+    <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/security</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/rest-api/reference</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/addons</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/store</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/troubleshooting</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://aetheris-docs.vercel.app/glossary</loc>
+    <lastmod>2026-08-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
 </urlset>
