@@ -4,13 +4,43 @@ The official way to run Aetheris on Windows 10/11. It manages Docker Desktop, Gi
 
 Repository: <https://github.com/aetheris-project/aetheris-windows-installer>
 
-## Install
+## Download
+
+### curl (Git Bash / WSL / any terminal)
+
+```bash
+curl -L -o aetheris-windows-installer.exe ^
+  https://github.com/aetheris-project/aetheris-windows-installer/releases/latest/download/aetheris-windows-installer.exe
+```
+
+Pin a specific version:
+
+```bash
+curl -L -o aetheris-windows-installer.exe ^
+  https://github.com/aetheris-project/aetheris-windows-installer/releases/download/v1.0.0/aetheris-windows-installer.exe
+```
+
+### PowerShell
+
+```powershell
+Invoke-WebRequest -Uri https://github.com/aetheris-project/aetheris-windows-installer/releases/latest/download/aetheris-windows-installer.exe -OutFile aetheris-windows-installer.exe
+```
+
+### winget (recommended)
 
 ```powershell
 winget install AetherisProject.AetherisWindowsInstaller
 ```
 
-Or download the `.exe` from the [latest release](https://github.com/aetheris-project/aetheris-windows-installer/releases).
+Winget downloads the installer and its dependencies (Docker Desktop, Git) automatically. You can also browse the [latest release](https://github.com/aetheris-project/aetheris-windows-installer/releases) on GitHub.
+
+Verify the download with:
+
+```
+certutil -hashfile aetheris-windows-installer.exe SHA256
+```
+
+The published hash lives in the [winget manifest](https://github.com/aetheris-project/aetheris-windows-installer/blob/main/winget/AetherisProject.AetherisWindowsInstaller.installer.yaml).
 
 ## What it does
 

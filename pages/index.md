@@ -7,6 +7,32 @@ hypervisor drivers, with total admin control and dynamic whitelabeling.
 
 > **Need this in another language?** Use the language selector in the top navigation bar to auto-translate the documentation. Available in English, Italian, Spanish, French, German, Portuguese and more.
 
+## Download
+
+The Windows Installer is distributed from the GitHub Releases feed of the
+`aetheris-windows-installer` repository:
+
+```bash
+curl -L -o aetheris-windows-installer.exe ^
+  https://github.com/aetheris-project/aetheris-windows-installer/releases/latest/download/aetheris-windows-installer.exe
+```
+
+PowerShell:
+
+```powershell
+Invoke-WebRequest -Uri https://github.com/aetheris-project/aetheris-windows-installer/releases/latest/download/aetheris-windows-installer.exe -OutFile aetheris-windows-installer.exe
+```
+
+You can also install it directly with winget:
+
+```
+winget install AetherisProject.AetherisWindowsInstaller
+```
+
+The source code of every component lives under the
+[`aetheris-project`](https://github.com/aetheris-project) organization;
+clone any repository with `git clone https://github.com/aetheris-project/<repo>.git`.
+
 ## Getting started
 
 - [Installation guide](installation.md) - per-OS deployment on Linux,
